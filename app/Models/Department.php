@@ -14,6 +14,11 @@ class Department extends Model
 
     protected $guarded = ['id'];
 
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
     public function fakultas(): BelongsTo
     {
         return $this->belongsTo(Faculty::class, 'faculty_id');
