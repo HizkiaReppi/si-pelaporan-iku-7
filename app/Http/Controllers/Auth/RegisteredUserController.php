@@ -24,7 +24,7 @@ class RegisteredUserController extends Controller
     public function create(): View
     {
         $faculties = Faculty::all();
-        return view('auth.register', compact('concentrations'));
+        return view('auth.register', compact('faculties'));
     }
 
     /**
@@ -56,15 +56,12 @@ class RegisteredUserController extends Controller
             $department = new Department();
             $department->user_id = $user->id;
             $department->faculty_id = $validatedData['faculty_id'];
-            $department->nim = $validatedData['nim'];
-            $department->batch = $validatedData['angkatan'];
-            $department->concentration = $validatedData['konsentrasi'];
 
             $department->save();
 
             DB::commit();
 
-            return redirect()->back()->with('toast', 'Pendaftaran berhasil. Silahkan menunggu admin memverifikasi akun anda.');
+            return redirect()->back()->with('success', 'Pendaftaran berhasil. Silahkan menunggu admin memverifikasi akun anda.');
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->withInput()->with('toast_error', 'Gagal mendaftar. Silahkan coba lagi.');

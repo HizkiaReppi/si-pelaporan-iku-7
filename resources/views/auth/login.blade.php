@@ -6,10 +6,10 @@
                 <!-- Logo -->
                 <div class="app-brand justify-content-center fs-2 mb-3">
                     <a href="/" class="app-brand-link">
-                        ADMIN PTIK
+                        SI PELAPORAN IKU 7
                     </a>
                 </div>
-                <h4 class="mb-2 fs-4 text-center">Selamat Datang di SI Admin PTIK</h4>
+                <h4 class="mb-2 fs-4 text-center">Selamat Datang di SI PELAPORAN IKU 7</h4>
 
                 <form class="mb-3" method="post" action="{{ route('login') }}">
                     @csrf

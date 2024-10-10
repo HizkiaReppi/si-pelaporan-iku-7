@@ -34,6 +34,8 @@
             </div>
         </div>
 
+        @include('sweetalert::alert')
+
         <script src="{{ $baseUrl }}/assets/vendor/libs/jquery/jquery.js"></script>
         <script src="{{ $baseUrl }}/assets/vendor/libs/popper/popper.js"></script>
         <script src="{{ $baseUrl }}/assets/vendor/js/bootstrap.js"></script>

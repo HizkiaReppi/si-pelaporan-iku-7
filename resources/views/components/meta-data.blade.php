@@ -1,4 +1,4 @@
-@props(['title', 'description' => 'Sistem Informasi Admin PTIK', 'csrfToken', 'baseurl'])
+@props(['title', 'description' => 'Sistem Informasi Pelaporan IKU 7 UNIMA', 'csrfToken', 'baseurl'])
 
 <!-- Essential Meta Tags -->
 <meta charset="utf-8">
@@ -6,17 +6,17 @@
 <meta name="csrf-token" content="{{ $csrfToken }}">
 <meta name="description" content="{{ $description }}" />
 <meta name="keywords" content="Unima, Fakultas Teknik, PTIK, Manado, Tondano">
-<meta name="author" content="Admin PTIK">
+<meta name="author" content="Pelaporan IKU 7 UNIMA">
 
 <!-- Open Graph Meta Tags for Social Sharing -->
-<meta property="og:title" content="{{ $title }} - Admin PTIK">
+<meta property="og:title" content="{{ $title }} - SI Pelaporan IKU 7 UNIMA">
 <meta property="og:description" content="{{ $description }}">
 <meta property="og:url" content="{{ url()->current() }}">
 <meta property="og:type" content="website">
 
 <!-- Twitter Card Meta Tags -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="{{ $title }} - Admin PTIK">
+<meta name="twitter:title" content="{{ $title }} - SI Pelaporan IKU 7 UNIMA">
 <meta name="twitter:description" content="{{ $description }}">
 <meta name="twitter:site" content="@AdminPTIK">
 
@@ -27,7 +27,7 @@
 <meta name="msapplication-TileImage" content="{{$baseurl}}/assets/images/ms-icon-144x144.png">
 
 <!-- Title -->
-<title>{{ $title }} - Admin PTIK</title>
+<title>{{ $title }} - SI Pelaporan IKU 7 UNIMA</title>
 
 <!-- Favicon and App Icons -->
 <link rel="apple-touch-icon" sizes="57x57" href="{{$baseurl}}/assets/images/apple-icon-57x57.png">
