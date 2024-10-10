@@ -43,6 +43,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('/periode', PeriodController::class)->names('dashboard.periode');
     Route::resource('/fakultas', FacultyController::class)->names('dashboard.fakultas')->except('create', 'edit');
     Route::resource('/program-studi', DepartmentController::class)->names('dashboard.prodi');
+    Route::put('/program-studi/{program_studi}/status', [DepartmentController::class, 'updateStatus'])->name('dashboard.prodi.update-status');
     
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile/admin', [ProfileController::class, 'update_admin'])->name('profile.update.admin');

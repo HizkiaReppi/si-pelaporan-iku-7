@@ -15,7 +15,7 @@ class Navbar extends Component
         $user = auth()->user();
 
         if ($user->role !== 'admin-prodi') {
-            $this->registrations = User::with(['department'])
+            $this->registrations = User::with(['prodi'])
                     ->where('status', 'pending')
                     ->orderBy('created_at', 'desc')
                     ->take(5)

@@ -7,6 +7,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -53,6 +54,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function laporanIku(): HasMany
     {
         return $this->hasMany(IKU7::class);
+    }
+
+    public function prodi(): BelongsTo
+    {
+        return $this->belongsTo(Department::class);
     }
 
     /**

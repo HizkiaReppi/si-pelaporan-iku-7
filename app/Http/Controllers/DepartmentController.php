@@ -129,9 +129,10 @@ class DepartmentController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Department $department)
+    public function show(Department $program_studi)
     {
-        //
+        $program_studi->load(['user', 'fakultas']);
+        return view('dashboard.prodi.show', compact('program_studi'));
     }
 
     /**
@@ -148,6 +149,29 @@ class DepartmentController extends Controller
     public function update(Request $request, Department $department)
     {
         //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function updateStatus(Request $request, Department $program_studi)
+    {
+        $validatedData = $request->validate([
+            'status' => ['required', 'in:pending,approved,rejected'],
+        ]);
+
+        DB::beginTransaction();
+
+        try {
+            $program_studi->user->status = $validatedData['status'];
+            $program_studi->user->save();
+
+            DB::commit();
+            return redirect()->route('dashboard.prodi.show', $program_studi->id)->with('toast_success', 'Status Akun Program Studi berhasil diperbaharui');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withInput()->with('toast_error', 'Gagal memperbaharui status akun Program Studi.');
+        }
     }
 
     /**
