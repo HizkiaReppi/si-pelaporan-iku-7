@@ -41,7 +41,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('/pelaporan', PelaporanProdiController::class)->names('dashboard.pelaporan-prodi');
     Route::resource('/daftar-pelaporan', PelaporanAdminController::class)->names('dashboard.pelaporan-admin');
     Route::resource('/periode', PeriodController::class)->names('dashboard.periode');
-    Route::resource('/fakultas', FacultyController::class)->names('dashboard.fakultas');
+    Route::resource('/fakultas', FacultyController::class)->names('dashboard.fakultas')->except('create', 'edit');
     Route::resource('/program-studi', DepartmentController::class)->names('dashboard.prodi');
     
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
