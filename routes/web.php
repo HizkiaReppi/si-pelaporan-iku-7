@@ -40,7 +40,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/administrator', [AdminController::class, 'index'])->middleware('password.confirm')->name('dashboard.administrator.index');
     Route::resource('/administrator', AdminController::class)->names('dashboard.administrator')->except('index');
     
-    Route::resource('/mata-kuliah', CourseController::class)->names('dashboard.mata-kuliah');
+    Route::resource('/mata-kuliah', CourseController::class)->names('dashboard.mata-kuliah')->except('create', 'edit');
     Route::resource('/pelaporan', PelaporanProdiController::class)->names('dashboard.pelaporan-prodi');
     Route::resource('/daftar-pelaporan', PelaporanAdminController::class)->names('dashboard.pelaporan-admin');
     Route::resource('/periode', PeriodController::class)->names('dashboard.periode');

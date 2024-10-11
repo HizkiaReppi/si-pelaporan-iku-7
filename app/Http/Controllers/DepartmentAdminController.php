@@ -36,8 +36,12 @@ class DepartmentAdminController extends Controller
                     return $row->prodi->fakultas->name;
                 })
                 ->addColumn('status', function ($row) {
-                    return '<span class="badge text-bg-' . StatusHelper::parseUserBadgeClassNameStatus($row->status) . '">
-                            '. StatusHelper::parseUserStatus($row->status) .'
+                    return '<span class="badge text-bg-' .
+                        StatusHelper::parseUserBadgeClassNameStatus($row->status) .
+                        '">
+                            ' .
+                        StatusHelper::parseUserStatus($row->status) .
+                        '
                         </span>';
                 })
                 ->addColumn('action', function ($row) {
@@ -163,7 +167,9 @@ class DepartmentAdminController extends Controller
             $program_studi->user->save();
 
             DB::commit();
-            return redirect()->route('dashboard.admin-prodi.show', $program_studi->id)->with('toast_success', 'Status Akun Program Studi berhasil diperbaharui');
+            return redirect()
+                ->route('dashboard.admin-prodi.show', $program_studi->id)
+                ->with('toast_success', 'Status Akun Program Studi berhasil diperbaharui');
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->withInput()->with('toast_error', 'Gagal memperbaharui status akun Program Studi.');
