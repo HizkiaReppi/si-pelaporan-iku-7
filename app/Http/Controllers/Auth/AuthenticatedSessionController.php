@@ -33,7 +33,7 @@ class AuthenticatedSessionController extends Controller
         if(Auth::user()->role == 'admin' || Auth::user()->role == 'super-admin'){
             return redirect()->intended(route('dashboard', absolute: false));
         } else if(Auth::user()->role == 'admin-prodi'){
-            return redirect()->intended(route('dashboard.pelaporan-prodi', absolute: false));
+            return redirect()->intended(route('dashboard.pelaporan-prodi.index', absolute: false));
         } else {
             abort(403);
         }

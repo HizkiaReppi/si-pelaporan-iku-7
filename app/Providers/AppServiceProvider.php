@@ -33,5 +33,11 @@ class AppServiceProvider extends ServiceProvider
                 ? Response::allow()
                 : Response::deny('You must be an administrator.');
         });
+
+        Gate::define('admin-prodi', function (User $user) {
+            return $user->role === 'admin-prodi'
+                ? Response::allow()
+                : Response::deny('You must be an admin prodi.');
+        });
     }
 }

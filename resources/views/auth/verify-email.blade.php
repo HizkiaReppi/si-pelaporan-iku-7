@@ -3,7 +3,7 @@
         <div class="card verify-email-card">
             <div class="card-body">
                 <div class="app-brand justify-content-center fs-2 mb-3">
-                    ADMIN PTIK
+                    SI PELAPORAN IKU 7
                 </div>
                 <div class="mb-2 text-center">
                     Terimakasih telah mendaftar! Sebelum memulai, bisakah anda memverifikasi alamat email anda dengan

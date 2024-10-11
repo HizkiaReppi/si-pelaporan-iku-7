@@ -7,8 +7,9 @@ use App\Models\User;
 
 class Navbar extends Component
 {
-    public $registrations;
-    public int $registrationsCount;
+    public $registrations = null;
+    public int $registrationsCount = 0;
+
 
     public function __construct()
     {
@@ -20,9 +21,10 @@ class Navbar extends Component
                     ->orderBy('created_at', 'desc')
                     ->take(5)
                     ->get();
+
+            $this->registrationsCount = $this->registrations->count();
         }
 
-        $this->registrationsCount = $this->registrations->count();
     }
 
     public function render()

@@ -10,30 +10,34 @@
         <ul class="navbar-nav flex-row align-items-center ms-auto">
             {{-- Notif --}}
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle hide-arrow position-relative" href="javascript:void(0);" data-bs-toggle="dropdown">
+                <a class="nav-link dropdown-toggle hide-arrow position-relative" href="javascript:void(0);"
+                    data-bs-toggle="dropdown">
                     <i class="fa fa-bell"></i>
-                    @if ($registrationsCount > 0)
-                        <span class="translate-middle badge rounded-pill bg-danger" style="position:absolute;top:10px;right:-10px;font-size:9.5px;">
-                            {{ $registrationsCount }}
-                            <span class="visually-hidden">unread messages</span>
-                        </span>
+                    @if (auth()->user()->role !== 'admin-prodi')
+                        @if ($registrationsCount > 0)
+                            <span class="translate-middle badge rounded-pill bg-danger"
+                                style="position:absolute;top:10px;right:-10px;font-size:9.5px;">
+                                {{ $registrationsCount }}
+                                <span class="visually-hidden">unread messages</span>
+                            </span>
+                        @endif
                     @endif
-
                 </a>
                 <div class="dropdown-menu dropdown-menu-end notif-dropdown" aria-labelledby="navbarDropdownNotif">
                     <h5 class="dropdown-header">Notifikasi</h6>
-                        @forelse($registrations as $registration)
-                        @if(auth()->user()->role !== 'admin-prodi')
-                            <a class="dropdown-item inline-block {{ $loop->last ? '' : 'border-bottom' }}" style="font-size: 14px;white-space: normal;width:100%;"
-                                href="{{ route('dashboard.prodi.show', $registration->id) }}">
-                                {{ $registration->name . ' ingin mengajukan membuat akun' }}
-                                <small class="text-muted"
-                                    style="font-size: 10px">({{ $registration->created_at->diffForHumans() }})</small>
-                            </a>
-                            @endif
-                        @empty
-                            <a class="dropdown-item text-center" href="#">Tidak ada notifikasi</a>
-                        @endforelse
+                        @if (auth()->user()->role !== 'admin-prodi')
+                            @forelse($registrations as $registration)
+                                <a class="dropdown-item inline-block {{ $loop->last ? '' : 'border-bottom' }}"
+                                    style="font-size: 14px;white-space: normal;width:100%;"
+                                    href="{{ route('dashboard.prodi.show', $registration->id) }}">
+                                    {{ $registration->name . ' ingin mengajukan membuat akun' }}
+                                    <small class="text-muted"
+                                        style="font-size: 10px">({{ $registration->created_at->diffForHumans() }})</small>
+                                </a>
+                            @empty
+                                <a class="dropdown-item text-center" href="#">Tidak ada notifikasi</a>
+                            @endforelse
+                        @endif
                 </div>
             </li>
 
@@ -41,8 +45,8 @@
             <li class="ms-2 nav-item navbar-dropdown dropdown-user dropdown">
                 <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
                     <div class="avatar avatar-online">
-                            <img src="https://eu.ui-avatars.com/api/?name={{ Auth::user()->name }}&size=250"
-                                class="w-px-40 h-auto rounded-circle" alt="{{ Auth::user()->name }}" />
+                        <img src="https://eu.ui-avatars.com/api/?name={{ Auth::user()->name }}&size=250"
+                            class="w-px-40 h-auto rounded-circle" alt="{{ Auth::user()->name }}" />
                     </div>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end">
@@ -52,9 +56,8 @@
                                 <div class="flex-shrink-0 me-3">
                                     <div class="avatar avatar-online">
                                         <div class="avatar avatar-online">
-                                                <img src="https://eu.ui-avatars.com/api/?name={{ Auth::user()->name }}&size=250"
-                                                    class="w-px-40 h-auto rounded-circle"
-                                                    alt="{{ Auth::user()->name }}" />
+                                            <img src="https://eu.ui-avatars.com/api/?name={{ Auth::user()->name }}&size=250"
+                                                class="w-px-40 h-auto rounded-circle" alt="{{ Auth::user()->name }}" />
                                         </div>
                                     </div>
                                 </div>

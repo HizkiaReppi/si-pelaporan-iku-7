@@ -4,7 +4,7 @@
     if (auth()->user()->role == 'admin' || auth()->user()->role == 'super-admin') {
         $homeLink = route('dashboard');
     } else if(auth()->user()->role == 'admin-prodi') {
-        $homeLink = route('dashboard.pelaporan-prodi'); 
+        $homeLink = route('dashboard.pelaporan-prodi.index'); 
     }
 @endphp
 
