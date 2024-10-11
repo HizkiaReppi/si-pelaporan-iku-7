@@ -24,21 +24,18 @@ class DepartmentController extends Controller
         $text = 'Anda tidak akan bisa mengembalikannya!';
         confirmDelete($title, $text);
 
+        $faculties = Faculty::all();
+
         if ($request->ajax()) {
-            $model = Department::with(['user', 'fakultas']);
+            $model = Department::with(['fakultas']);
 
             return DataTables::of($model)
                 ->addIndexColumn()
-                ->addColumn('name', function ($row) {
-                    return $row->user->name;
-                })
                 ->addColumn('fakultas', function ($row) {
                     return $row->fakultas->name;
                 })
-                ->addColumn('status', function ($row) {
-                    return '<span class="badge text-bg-' . StatusHelper::parseUserBadgeClassNameStatus($row->user->status) . '">
-                            '. StatusHelper::parseUserStatus($row->user->status) .'
-                        </span>';
+                ->addColumn('name', function ($row) {
+                    return $row->name;
                 })
                 ->addColumn('action', function ($row) {
                     $btn =
@@ -48,17 +45,16 @@ class DepartmentController extends Controller
                                         <i class="bx bx-dots-vertical-rounded"></i>
                                     </button>
                                     <div class="dropdown-menu">
-                                        <a class="dropdown-item"
-                                            href="' .
-                        route('dashboard.prodi.show', $row->id) .
+                                        <button class="dropdown-item btn-edit"
+                                             data-bs-toggle="modal" data-bs-target="#modal-edit-data" data-id="' .
+                        $row->id .
+                        '" data-name="' .
+                        $row->name .
+                        '" data-faculty-id="' .
+                        $row->fakultas->id .
                         '">
-                                            <i class="bx bxs-user-detail me-1"></i> Detail
-                                        </a>
-                                        <a href="' .
-                        route('dashboard.prodi.edit', $row->id) .
-                        '" class="dropdown-item btn-edit">
                                             <i class="bx bx-edit-alt me-1"></i> Edit
-                                        </a>
+                                        </button>
                                         <a class="dropdown-item"
                                             href="' .
                         route('dashboard.prodi.destroy', $row->id) .
@@ -74,16 +70,7 @@ class DepartmentController extends Controller
                 ->make(true);
         }
 
-        return view('dashboard.prodi.index');
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create(): View
-    {
-        $faculties = Faculty::all();
-        return view('dashboard.prodi.create', compact('faculties'));
+        return view('dashboard.prodi.index', compact('faculties'));
     }
 
     /**
@@ -91,29 +78,21 @@ class DepartmentController extends Controller
      */
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'name' => ['required', 'string', 'max:255', 'min:2', 'regex:/^[a-zA-Z\s]*$/'],
-            'email' => ['required', 'string', 'email', 'max:255', 'min:4', 'unique:' . User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'faculty_id' => ['required', 'exists:' . Faculty::class . ',id'],
-        ], [
-            'name.regex' => 'The name field must be alphabet.',
-        ]);
+        $validatedData = $request->validate(
+            [
+                'fullname' => ['required', 'string', 'max:255', 'min:2', 'regex:/^[a-zA-Z\s0-9]*$/'],
+                'faculty_id' => ['required', 'exists:' . Faculty::class . ',id'],
+            ],
+            [
+                'fullname.regex' => 'The name field must be alphabet.',
+            ],
+        );
 
         DB::beginTransaction();
 
         try {
-            $user = new User();
-            $user->name = $validatedData['name'];
-            $user->email = $validatedData['email'];
-            $user->password = Hash::make($validatedData['password']);
-            $user->role = 'admin-prodi';
-            $user->status = 'approved';
-
-            $user->save();
-
             $department = new Department();
-            $department->user_id = $user->id;
+            $department->name = $validatedData['fullname'];
             $department->faculty_id = $validatedData['faculty_id'];
 
             $department->save();
@@ -127,28 +106,34 @@ class DepartmentController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(Department $program_studi)
-    {
-        $program_studi->load(['user', 'fakultas']);
-        return view('dashboard.prodi.show', compact('program_studi'));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Department $department)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Department $department)
+    public function update(Request $request, Department $program_studi)
     {
-        //
+        $validatedData = $request->validate(
+            [
+                'fullname' => ['required', 'string', 'max:255', 'min:2', 'regex:/^[a-zA-Z\s0-9]*$/'],
+                'faculty_id' => ['required', 'exists:' . Faculty::class . ',id'],
+            ],
+            [
+                'fullname.regex' => 'The name field must be alphabet.',
+            ],
+        );
+
+        DB::beginTransaction();
+
+        try {
+            $program_studi->name = $validatedData['fullname'];
+            $program_studi->faculty_id = $validatedData['faculty_id'];
+
+            $program_studi->save();
+
+            DB::commit();
+            return redirect()->route('dashboard.prodi.index')->with('toast_success', 'Program Studi berhasil diperbaharui');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withInput()->with('toast_error', 'Gagal memperbaharui Program Studi.');
+        }
     }
 
     /**
@@ -167,7 +152,9 @@ class DepartmentController extends Controller
             $program_studi->user->save();
 
             DB::commit();
-            return redirect()->route('dashboard.prodi.show', $program_studi->id)->with('toast_success', 'Status Akun Program Studi berhasil diperbaharui');
+            return redirect()
+                ->route('dashboard.prodi.show', $program_studi->id)
+                ->with('toast_success', 'Status Akun Program Studi berhasil diperbaharui');
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->withInput()->with('toast_error', 'Gagal memperbaharui status akun Program Studi.');
@@ -177,8 +164,18 @@ class DepartmentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Department $department)
+    public function destroy(Department $program_studi)
     {
-        //
+        DB::beginTransaction();
+
+        try {
+            $program_studi->delete();
+            DB::commit();
+
+            return redirect()->route('dashboard.prodi.index')->with('toast_success', 'Program Studi berhasil dihapus.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('toast_error', 'Gagal menghapus Program Studi.');
+        }
     }
 }

@@ -58,7 +58,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function prodi(): BelongsTo
     {
-        return $this->belongsTo(Department::class);
+        return $this->belongsTo(Department::class, 'department_id');
     }
 
     /**

@@ -35,6 +35,16 @@ class DatabaseSeeder extends Seeder
             'email_verified_at' => now(),
             'status' => 'approved',
         ]);
+
+        User::factory()->create([
+            'id' => Str::uuid(),
+            'name' => 'Pendidikan Teknologi Informasi dan Komunikasi',
+            'email' => 'ptik@unima.ac.id',
+            'role' => 'admin-prodi',
+            'password' => bcrypt('ptik'),
+            'email_verified_at' => now(),
+            'status' => 'approved',
+        ]);
     }
 }
 

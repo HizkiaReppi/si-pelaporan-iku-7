@@ -3,7 +3,9 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CourseController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DepartmentAdminController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\FacultyController;
 use App\Http\Controllers\HeadOfDepartmentController;
@@ -38,12 +40,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/administrator', [AdminController::class, 'index'])->middleware('password.confirm')->name('dashboard.administrator.index');
     Route::resource('/administrator', AdminController::class)->names('dashboard.administrator')->except('index');
     
+    Route::resource('/mata-kuliah', CourseController::class)->names('dashboard.mata-kuliah');
     Route::resource('/pelaporan', PelaporanProdiController::class)->names('dashboard.pelaporan-prodi');
     Route::resource('/daftar-pelaporan', PelaporanAdminController::class)->names('dashboard.pelaporan-admin');
     Route::resource('/periode', PeriodController::class)->names('dashboard.periode');
     Route::resource('/fakultas', FacultyController::class)->names('dashboard.fakultas')->except('create', 'edit');
-    Route::resource('/program-studi', DepartmentController::class)->names('dashboard.prodi');
-    Route::put('/program-studi/{program_studi}/status', [DepartmentController::class, 'updateStatus'])->name('dashboard.prodi.update-status');
+    Route::resource('/program-studi', DepartmentController::class)->names('dashboard.prodi')->except('create', 'edit', 'show');
+    Route::resource('/admin-program-studi', DepartmentAdminController::class)->names('dashboard.admin-prodi');
+    Route::put('/admin-program-studi/{program_studi}/status', [DepartmentAdminController::class, 'updateStatus'])->name('dashboard.admin-prodi.update-status');
     
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile/admin', [ProfileController::class, 'update_admin'])->name('profile.update.admin');

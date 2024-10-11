@@ -53,6 +53,12 @@
             <li class="menu-item {{ request()->routeIs('dashboard.pelaporan-admin.*') ? 'active' : '' }}">
                 <a href="{{ route('dashboard.pelaporan-admin.index') }}" class="menu-link">
                     <i class="menu-icon tf-icons fa-solid fa-clipboard-list"></i>
+                    <div data-i18n="Laporan IKU 7">Laporan IKU 7</div>
+                </a>
+            </li>
+            <li class="menu-item {{ request()->routeIs('dashboard.mata-kuliah.*') ? 'active' : '' }}">
+                <a href="{{ route('dashboard.mata-kuliah.index') }}" class="menu-link">
+                    <i class="menu-icon tf-icons fa-solid fa-table-list"></i>
                     <div data-i18n="Daftar Mata Kuliah">Daftar Mata Kuliah</div>
                 </a>
             </li>
@@ -75,6 +81,12 @@
                 <a href="{{ route('dashboard.prodi.index') }}" class="menu-link">
                     <i class="menu-icon tf-icons fa-solid fa-user"></i>
                     <div data-i18n="Program Studi">Program Studi</div>
+                </a>
+            </li>
+            <li class="menu-item {{ request()->routeIs('dashboard.admin-prodi.*') ? 'active' : '' }}">
+                <a href="{{ route('dashboard.admin-prodi.index') }}" class="menu-link">
+                    <i class="menu-icon tf-icons fa-solid fa-user-pen"></i>
+                    <div data-i18n="Program Studi">Admin Program Studi</div>
                 </a>
             </li>
             <li class="menu-item {{ request()->routeIs('dashboard.administrator.*') ? 'active' : '' }}">

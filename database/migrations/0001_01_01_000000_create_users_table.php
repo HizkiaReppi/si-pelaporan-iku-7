@@ -21,6 +21,7 @@ return new class extends Migration
             $table->timestamp('last_activity')->nullable();
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->rememberToken();
+            $table->foreignUuid('department_id')->nullable()->constrained()->onDelete('cascade');
             $table->timestamps();
         });
 

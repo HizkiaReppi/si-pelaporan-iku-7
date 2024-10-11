@@ -17,19 +17,21 @@ return new class extends Migration
             $table->foreignId('course_id')->constrained()->onDelete('cascade');
             $table->foreignId('period_id')->constrained()->onDelete('cascade');
             $table->foreignUuid('user_id')->constrained()->onDelete('cascade');
-            $table->integer('score_case_method');
-            $table->integer('score_project_based');
-            $table->integer('score_cognitive_task');
-            $table->integer('score_cognitive_quiz');
-            $table->integer('score_cognitive_uts');
-            $table->integer('score_cognitive_uas');
-            $table->text('description_case_method');
-            $table->text('description_project_based');
-            $table->text('description_cognitive_task');
-            $table->text('description_cognitive_quiz');
-            $table->text('description_cognitive_uts');
-            $table->text('description_cognitive_uas');
-            $table->string('file_rps');
+            $table->integer('score_case_method')->nullable();
+            $table->integer('score_project_based')->nullable();
+            $table->integer('score_cognitive_task')->nullable();
+            $table->integer('score_cognitive_quiz')->nullable();
+            $table->integer('score_cognitive_uts')->nullable();
+            $table->integer('score_cognitive_uas')->nullable();
+            $table->text('description_case_method')->nullable();
+            $table->text('description_project_based')->nullable();
+            $table->text('description_cognitive_task')->nullable();
+            $table->text('description_cognitive_quiz')->nullable();
+            $table->text('description_cognitive_uts')->nullable();
+            $table->text('description_cognitive_uas')->nullable();
+            $table->string('file_rps')->nullable();
+            $table->enum('status_verifikasi', ['pending', 'approved', 'rejected'])->default('pending');
+            $table->text('deskripsi_verifikasi')->nullable();
             $table->timestamps();
         });
     }
@@ -39,6 +41,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('i_k_u7_s');
+        Schema::dropIfExists('iku7');
     }
 };
