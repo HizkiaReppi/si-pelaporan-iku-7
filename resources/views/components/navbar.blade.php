@@ -29,7 +29,7 @@
                             @forelse($registrations as $registration)
                                 <a class="dropdown-item inline-block {{ $loop->last ? '' : 'border-bottom' }}"
                                     style="font-size: 14px;white-space: normal;width:100%;"
-                                    href="{{ route('dashboard.prodi.show', $registration->id) }}">
+                                    href="{{ route('dashboard.admin-prodi.show', $registration->id) }}">
                                     {{ $registration->name . ' ingin mengajukan membuat akun' }}
                                     <small class="text-muted"
                                         style="font-size: 10px">({{ $registration->created_at->diffForHumans() }})</small>

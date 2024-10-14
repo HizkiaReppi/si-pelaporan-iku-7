@@ -14,27 +14,18 @@
                 <form class="mb-3 mt-1" method="post" action="{{ route('register') }}">
                     @csrf
                     <div class="mb-3">
-                        <label class="form-label" for="fullname">Nama Program Studi <span
+                        <label for="department_id" class="form-label">Nama Program Studi <span
                                 style="font-size:14px;color:red">*</span></label>
-                        <input type="text" class="form-control {{ $errors->get('fullname') ? 'border-danger' : '' }}"
-                            id="fullname" name="fullname" placeholder="Nama Lengkap" value="{{ old('fullname') }}"
-                            autocomplete="name" required autofocus />
-                        <x-input-error class="mt-2" :messages="$errors->get('fullname')" />
+                        <x-select :options="$departments" key="name" placeholders="Pilih Program Studi" id="department_id"
+                            name="department_id" required />
+                        <x-input-error class="mt-2" :messages="$errors->get('department_id')" />
                     </div>
                     <div class="mb-3">
-                        <label for="faculty_id" class="form-label">Fakultas <span
-                                style="font-size:14px;color:red">*</span></label>
-                        <x-select :options="$faculties" key="name" placeholders="Pilih Fakultas" id="faculty_id"
-                            name="faculty_id" required />
-                        <x-input-error class="mt-2" :messages="$errors->get('faculty_id')" />
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label" for="email">Email <span
+                        <label class="form-label" for="email">Email Program Studi <span
                                 style="font-size:14px;color:red">*</span></label>
                         <input type="email" class="form-control {{ $errors->get('email') ? 'border-danger' : '' }}"
-                            id="email" name="email" placeholder="Email" value="{{ old('email') }}"
+                            id="email" name="email" placeholder="Email Program Studi" value="{{ old('email') }}"
                             autocomplete="email" required />
-                        <div id="form-email-help" class="form-text"></div>
                         <x-input-error class="mt-2" :messages="$errors->get('email')" />
                     </div>
                     <div class="mb-3 form-password-toggle">
