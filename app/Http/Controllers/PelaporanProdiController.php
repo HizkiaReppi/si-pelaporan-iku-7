@@ -315,4 +315,16 @@ class PelaporanProdiController extends Controller
             return redirect()->back()->withInput()->with('toast_error', 'Terjadi kesalahan. Silakan coba lagi.');
         }
     }
+
+    public function inputBobot(Course $mata_kuliah)
+    {
+        $mata_kuliah->load('pelaporanIku');
+        return redirect()->route('dashboard.pelaporan-prodi.edit-bobot', $mata_kuliah->pelaporanIku->id);
+    }
+
+    public function inputDeskripsi(Course $mata_kuliah)
+    {
+        $mata_kuliah->load('pelaporanIku');
+        return redirect()->route('dashboard.pelaporan-prodi.edit-deskripsi', $mata_kuliah->pelaporanIku->id);
+    }
 }

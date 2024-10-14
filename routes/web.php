@@ -47,6 +47,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/pelaporan/{pelaporan}/edit-deskripsi', [PelaporanProdiController::class, 'editDeskripsi'])->name('dashboard.pelaporan-prodi.edit-deskripsi');
     Route::put('/pelaporan/{pelaporan}/update-deskripsi', [PelaporanProdiController::class, 'updateDeskripsi'])->name('dashboard.pelaporan-prodi.update-deskripsi');
     Route::put('/pelaporan/{pelaporan}/update-rps', [PelaporanProdiController::class, 'updateRPS'])->name('dashboard.pelaporan-prodi.update-rps');
+    Route::post('/pelaporan/{mata_kuliah}/input-bobot', [PelaporanProdiController::class, 'inputBobot'])->name('dashboard.pelaporan-prodi.input-bobot');
+    Route::post('/pelaporan/{mata_kuliah}/input-deskripsi', [PelaporanProdiController::class, 'inputDeskripsi'])->name('dashboard.pelaporan-prodi.input-deskripsi');
 
     Route::resource('/daftar-pelaporan', PelaporanAdminController::class)->names('dashboard.pelaporan-admin');
     Route::resource('/periode', PeriodController::class)->names('dashboard.periode');

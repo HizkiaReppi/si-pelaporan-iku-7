@@ -3,8 +3,8 @@
 
     if (auth()->user()->role == 'admin' || auth()->user()->role == 'super-admin') {
         $homeLink = route('dashboard');
-    } else if(auth()->user()->role == 'admin-prodi') {
-        $homeLink = route('dashboard.pelaporan-prodi.index'); 
+    } elseif (auth()->user()->role == 'admin-prodi') {
+        $homeLink = route('dashboard.pelaporan-prodi.index');
     }
 @endphp
 
@@ -33,9 +33,17 @@
                             <div data-i18n="Daftar Mata Kuliah">Daftar Mata Kuliah</div>
                         </a>
                     </li>
-                    <li class="menu-item {{ request()->routeIs('dashboard.pelaporan-prodi.create') ? 'active' : '' }}">
-                        <a href="{{ route('dashboard.pelaporan-prodi.create') }}" class="menu-link">
-                            <div data-i18n="Tambah Mata Kuliah">Tambah Mata Kuliah</div>
+                    <li class="menu-item {{ request()->routeIs('dashboard.pelaporan-prodi.edit-bobot') ? 'active' : '' }}">
+                        <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#modal-bobot"
+                            class="menu-link">
+                            <div data-i18n="Input Bobot Mata Kuliah">Input Bobot Mata Kuliah</div>
+                        </a>
+                    </li>
+                    <li
+                        class="menu-item {{ request()->routeIs('dashboard.pelaporan-prodi.edit-deskripsi') ? 'active' : '' }}">
+                        <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#modal-deskripsi"
+                            class="menu-link">
+                            <div data-i18n="Input Deskripsi Mata Kuliah">Input Deskripsi Mata Kuliah</div>
                         </a>
                     </li>
                 </ul>
@@ -95,6 +103,83 @@
                     <div data-i18n="Admin">Administrator</div>
                 </a>
             </li>
-        @endcanany
-    </ul>
+        </ul>
+    @endcanany
 </aside>
+
+@can('admin-prodi')
+    <!-- Modal Deskripsi -->
+    <div class="modal fade" id="modal-deskripsi" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="1"
+        aria-labelledby="modalEditDataLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="modalEditDataLabel">Input Deskripsi Mata Kuliah</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <form id="input-deskripsi" method="post"
+                            action="{{ route('dashboard.pelaporan-prodi.input-deskripsi', '') }}">
+                            @csrf
+                            <label class="form-label" for="course_id">Mata Kuliah <span
+                                    style="font-size:14px;color:red">*</span></label>
+                            <x-select :options="$courses" key="name" placeholders="Pilih Mata Kuliah" id="course_deskripsi"
+                                name="course_id" required />
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary" form="input-deskripsi">Pilih Mata Kuliah Ini</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Bobot -->
+    <div class="modal fade" id="modal-bobot" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="modalEditDataLabel">Input Bobot Mata Kuliah</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <form id="input-bobot" method="post"
+                            action="{{ route('dashboard.pelaporan-prodi.input-bobot', '') }}">
+                            @csrf
+                            <label class="form-label" for="course_id">Mata Kuliah <span
+                                    style="font-size:14px;color:red">*</span></label>
+                            <x-select :options="$courses" key="name" placeholders="Pilih Mata Kuliah" id="course_bobot"
+                                name="course_id" required />
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary" form="input-bobot">Pilih Mata Kuliah Ini</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $('#course_deskripsi').on('change', function() {
+                let courseId = $(this).val()
+                let formAction = "{{ route('dashboard.pelaporan-prodi.input-deskripsi', ':id') }}";
+                formAction = formAction.replace(':id', courseId);
+                console.log(formAction);
+                $('#input-deskripsi').attr('action', formAction);
+            });
+
+            $('#course_bobot').on('change', function() {
+                let courseId = $(this).val();
+                let formAction = "{{ route('dashboard.pelaporan-prodi.input-bobot', ':id') }}";
+                formAction = formAction.replace(':id', courseId);
+                $('#input-bobot').attr('action', formAction);
+            });
+        });
+    </script>
+@endcan
