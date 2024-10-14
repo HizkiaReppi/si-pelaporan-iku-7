@@ -41,9 +41,7 @@ class PelaporanProdiController extends Controller
                     return $row->periode->name;
                 })
                 ->addColumn('status', function ($row) {
-                    return '<span class="badge text-bg-' .
-                                StatusHelper::parseUserBadgeClassNameStatus($row->pelaporanIku->status_verifikasi) .
-                            '">' . StatusHelper::parseUserBadgeClassNameStatus($row->pelaporanIku->status_verifikasi) . '</span>';
+                    return '<span class="badge text-bg-' . StatusHelper::parseUserBadgeClassNameStatus($row->pelaporanIku->status_verifikasi) . '">' . StatusHelper::parseUserStatus($row->pelaporanIku->status_verifikasi) . '</span>';
                 })
                 ->addColumn('action', function ($row) {
                     $btn =
@@ -54,22 +52,28 @@ class PelaporanProdiController extends Controller
                         </button>
                         <div class="dropdown-menu">
                             <a class="dropdown-item" href="' .
-                        route('dashboard.pelaporan-prodi.show', $row->id) .
+                        route('dashboard.pelaporan-prodi.show', $row->pelaporanIku->id) .
                         '">
                                 <i class="bx bxs-user-detail me-1"></i> Detail
                             </a>
-                            <button class="dropdown-item btn-edit" data-bs-toggle="modal" data-bs-target="#modal-edit-data" data-id="' .
-                        $row->id .
+                            <a href="' .
+                        route('dashboard.pelaporan-prodi.edit-bobot', $row->pelaporanIku->id) .
+                        '" class="dropdown-item btn-edit">
+                                <i class="bx bx-edit-alt me-1"></i> Edit Bobot
+                            </a>
+                            <a href="' .
+                        route('dashboard.pelaporan-prodi.edit-deskripsi', $row->pelaporanIku->id) .
+                        '" class="dropdown-item btn-edit">
+                                <i class="bx bx-edit-alt me-1"></i> Edit Deskripsi
+                            </a>
+                            <button class="dropdown-item btn-edit"
+                                             data-bs-toggle="modal" data-bs-target="#modal-edit-rps" data-id="' .
+                        $row->pelaporanIku->id .
                         '" data-name="' .
                         $row->name .
                         '">
-                                <i class="bx bx-edit-alt me-1"></i> Edit
-                            </button>
-                            <a class="dropdown-item" href="' .
-                        route('dashboard.pelaporan-prodi.destroy', $row->id) .
-                        '" data-confirm-delete="true">
-                                <i class="bx bx-trash me-1"></i> Delete
-                            </a>
+                                            <i class="bx bx-edit-alt me-1"></i> Edit RPS
+                                        </button>
                         </div>
                     </div>';
                     return $btn;
@@ -79,6 +83,15 @@ class PelaporanProdiController extends Controller
         }
 
         return view('dashboard.pelaporan-prodi.index');
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function show(IKU7 $pelaporan): View
+    {
+        $pelaporan->load('mataKuliah');
+        return view('dashboard.pelaporan-prodi.show', compact('pelaporan'));
     }
 
     /**
@@ -184,6 +197,118 @@ class PelaporanProdiController extends Controller
                 return redirect()->route('dashboard.pelaporan-prodi.index')->with('toast_success', 'Data Mata Kuliah berhasil disimpan.');
             } else {
                 return redirect()->back()->with('toast_error', 'Gagal upload file');
+            }
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withInput()->with('toast_error', 'Terjadi kesalahan. Silakan coba lagi.');
+        }
+    }
+
+    public function editBobot(IKU7 $pelaporan)
+    {
+        $pelaporan->load('mataKuliah');
+        return view('dashboard.pelaporan-prodi.edit-bobot', compact('pelaporan'));
+    }
+
+    public function editDeskripsi(IKU7 $pelaporan)
+    {
+        $pelaporan->load('mataKuliah');
+        return view('dashboard.pelaporan-prodi.edit-deskripsi', compact('pelaporan'));
+    }
+
+    public function updateBobot(Request $request, IKU7 $pelaporan)
+    {
+        $validatedData = $request->validate([
+            'bobot_case_method' => ['required', 'numeric', 'min:50', 'max:100'],
+            'bobot_project_based' => ['required', 'numeric', 'min:50', 'max:100'],
+            'bobot_kognitif_tugas' => ['required', 'numeric', 'min:0', 'max:100'],
+            'bobot_kognitif_kuis' => ['required', 'numeric', 'min:0', 'max:100'],
+            'bobot_kognitif_uts' => ['required', 'numeric', 'min:0', 'max:100'],
+            'bobot_kognitif_uas' => ['required', 'numeric', 'min:0', 'max:100'],
+        ]);
+
+        DB::beginTransaction();
+
+        try {
+            $pelaporan->score_case_method = $validatedData['bobot_case_method'];
+            $pelaporan->score_project_based = $validatedData['bobot_project_based'];
+            $pelaporan->score_cognitive_task = $validatedData['bobot_kognitif_tugas'];
+            $pelaporan->score_cognitive_quiz = $validatedData['bobot_kognitif_kuis'];
+            $pelaporan->score_cognitive_uts = $validatedData['bobot_kognitif_uts'];
+            $pelaporan->score_cognitive_uas = $validatedData['bobot_kognitif_uas'];
+            $pelaporan->save();
+
+            DB::commit();
+            return redirect()->route('dashboard.pelaporan-prodi.index')->with('toast_success', 'Data Bobot Mata Kuliah berhasil disimpan.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withInput()->with('toast_error', 'Terjadi kesalahan. Silakan coba lagi.');
+        }
+    }
+
+    public function updateDeskripsi(Request $request, IKU7 $pelaporan)
+    {
+        $validatedData = $request->validate([
+            'deskripsi_penilaian_case_method' => ['required', 'string'],
+            'deskripsi_penilaian_project_based' => ['required', 'string'],
+            'deskripsi_penilaian_kognitif_tugas' => ['required', 'string'],
+            'deskripsi_penilaian_kognitif_kuis' => ['required', 'string'],
+            'deskripsi_penilaian_kognitif_uts' => ['required', 'string'],
+            'deskripsi_penilaian_kognitif_uas' => ['required', 'string'],
+        ]);
+
+        DB::beginTransaction();
+
+        try {
+            $pelaporan->description_case_method = $validatedData['deskripsi_penilaian_case_method'];
+            $pelaporan->description_project_based = $validatedData['deskripsi_penilaian_project_based'];
+            $pelaporan->description_cognitive_task = $validatedData['deskripsi_penilaian_kognitif_tugas'];
+            $pelaporan->description_cognitive_quiz = $validatedData['deskripsi_penilaian_kognitif_kuis'];
+            $pelaporan->description_cognitive_uts = $validatedData['deskripsi_penilaian_kognitif_uts'];
+            $pelaporan->description_cognitive_uas = $validatedData['deskripsi_penilaian_kognitif_uas'];
+            $pelaporan->save();
+
+            DB::commit();
+            return redirect()->route('dashboard.pelaporan-prodi.index')->with('toast_success', 'Data Deskripsi Mata Kuliah berhasil disimpan.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withInput()->with('toast_error', 'Terjadi kesalahan. Silakan coba lagi.');
+        }
+    }
+
+    public function updateRPS(Request $request, IKU7 $pelaporan)
+    {
+        $accessToken = $this->token();
+        $folderId = config('services.google_drive.folder_id');
+
+        $validatedData = $request->validate([
+            'file_rps' => ['required', 'file', 'mimes:pdf', 'max:2048'],
+        ]);
+
+        DB::beginTransaction();
+
+        try {
+            $file = $request->file('file_rps');
+            $name = $pelaporan->mataKuliah->code . '_' . $pelaporan->mataKuliah->name . '_' . time() . '.' . $file->getClientOriginalExtension();
+            $path = $file->getRealPath();
+
+            $fileMetadata = [
+                'name' => $name,
+                'parents' => [$folderId],
+            ];
+
+            $response = Http::withToken($accessToken)->attach('metadata', json_encode($fileMetadata), 'metadata.json')->attach('file', file_get_contents($path), $name)->post('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart');
+
+            if ($response->successful()) {
+                $file_id = json_decode($response->body())->id;
+                
+                $pelaporan->file_rps = $file_id;
+                $pelaporan->save();
+
+                DB::commit();
+                return redirect()->route('dashboard.pelaporan-prodi.index')->with('toast_success', 'Data RPS Mata Kuliah berhasil disimpan.');
+            } else {
+                return redirect()->back()->with('toast_error', 'Gagal upload file RPS');
             }
         } catch (\Exception $e) {
             DB::rollBack();

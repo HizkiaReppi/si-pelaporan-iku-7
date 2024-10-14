@@ -79,7 +79,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         IKU7::factory()->create([
-            'id' => 1,
+            'id' => Str::uuid(),
             'department_id' => $department->id,
             'period_id' => $period->id,
             'user_id' => $user->id,
