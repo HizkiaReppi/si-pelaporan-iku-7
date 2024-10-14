@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Course;
 use App\Models\Department;
+use App\Models\IKU7;
+use App\Models\Period;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
@@ -20,6 +23,7 @@ class CourseController extends Controller
         confirmDelete($title, $text);
 
         $departments = Department::all();
+        $periods = Period::all();
 
         if ($request->ajax()) {
             $model = Course::with(['prodi']);
@@ -76,7 +80,7 @@ class CourseController extends Controller
                 ->make(true);
         }
 
-        return view('dashboard.mata-kuliah.index', compact('departments'));
+        return view('dashboard.mata-kuliah.index', compact('departments', 'periods'));
     }
 
     /**
@@ -86,6 +90,7 @@ class CourseController extends Controller
     {
         $validatedData = $request->validate([
             'department_id' => ['required', 'exists:' . Department::class . ',id'],
+            'period_id' => ['required', 'exists:' . Period::class . ',id'],
             'kode-mk' => ['required', 'string', 'max:20'],
             'nama-mk' => ['required', 'string', 'max:100'],
         ]);
@@ -93,11 +98,22 @@ class CourseController extends Controller
         DB::beginTransaction();
 
         try {
+            $user = User::where('role', 'admin-prodi')
+                ->where('department_id', $validatedData['department_id'])
+                ->first();
+
             $course = new Course();
             $course->code = $validatedData['kode-mk'];
             $course->name = $validatedData['nama-mk'];
             $course->department_id = $validatedData['department_id'];
             $course->save();
+
+            $iku = new IKU7();
+            $iku->course_id = $course->id;
+            $iku->department_id = $validatedData['department_id'];
+            $iku->user_id = $user->id;
+            $iku->period_id = $validatedData['period_id'];
+            $iku->save();
 
             DB::commit();
             return redirect()->route('dashboard.mata-kuliah.index')->with('toast_success', 'Mata Kuliah berhasil ditambahkan.');

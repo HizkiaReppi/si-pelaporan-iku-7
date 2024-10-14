@@ -6,7 +6,8 @@
     <div class="card">
         <div class="d-flex justify-content-between align-items-center">
             <h5 class="card-header">Daftar Mata Kuliah</h5>
-            <button data-bs-toggle="modal" data-bs-target="#staticBackdrop" class="btn btn-primary me-4">Tambah Mata Kuliah</button>
+            <button data-bs-toggle="modal" data-bs-target="#staticBackdrop" class="btn btn-primary me-4">Tambah Mata
+                Kuliah</button>
         </div>
         <div class="table-responsive text-nowrap px-4 pb-4">
             <table class="table" id="table-mk">
@@ -38,16 +39,16 @@
                         <div class="mb-3">
                             <label for="department_id" class="form-label">Program Studi <span
                                     style="font-size:14px;color:red">*</span></label>
-                            <x-select :options="$departments" key="name" placeholders="Pilih Program Studi" id="department_id"
-                                name="department_id" required />
+                            <x-select :options="$departments" key="name" placeholders="Pilih Program Studi"
+                                id="department_id" name="department_id" required />
                             <x-input-error class="mt-2" :messages="$errors->get('department_id')" />
                         </div>
                         <div class="mb-3">
                             <label class="form-label" for="kode-mk">Kode Mata Kuliah <span
                                     style="font-size:14px;color:red">*</span></label>
                             <input type="text"
-                                class="form-control {{ $errors->get('kode-mk') ? 'border-danger' : '' }}"
-                                id="kode-mk" name="kode-mk" placeholder="Kode Mata Kuliah" value="{{ old('kode-mk') }}"
+                                class="form-control {{ $errors->get('kode-mk') ? 'border-danger' : '' }}" id="kode-mk"
+                                name="kode-mk" placeholder="Kode Mata Kuliah" value="{{ old('kode-mk') }}"
                                 autocomplete="name" autofocus required />
                             <x-input-error class="mt-2" :messages="$errors->get('kode-mk')" />
                         </div>
@@ -55,10 +56,17 @@
                             <label class="form-label" for="nama-mk">Nama Mata Kuliah <span
                                     style="font-size:14px;color:red">*</span></label>
                             <input type="text"
-                                class="form-control {{ $errors->get('nama-mk') ? 'border-danger' : '' }}"
-                                id="nama-mk" name="nama-mk" placeholder="Nama Mata Kuliah" value="{{ old('nama-mk') }}"
+                                class="form-control {{ $errors->get('nama-mk') ? 'border-danger' : '' }}" id="nama-mk"
+                                name="nama-mk" placeholder="Nama Mata Kuliah" value="{{ old('nama-mk') }}"
                                 autocomplete="name" autofocus required />
                             <x-input-error class="mt-2" :messages="$errors->get('nama-mk')" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="period_id" class="form-label">Tahun Akademik <span
+                                    style="font-size:14px;color:red">*</span></label>
+                            <x-select :options="$periods" key="name" placeholders="Pilih Tahun Akademik" id="period_id"
+                                name="period_id" required />
+                            <x-input-error class="mt-2" :messages="$errors->get('period_id')" />
                         </div>
                     </form>
                 </div>
@@ -104,6 +112,13 @@
                                 placeholder="Nama Mata Kuliah" required />
                             <x-input-error class="mt-2" :messages="$errors->get('nama-mk')" />
                         </div>
+                        <div class="mb-3">
+                            <label for="edit-period_id" class="form-label">Tahun Akademik <span
+                                    style="font-size:14px;color:red">*</span></label>
+                            <x-select :options="$periods" key="name" placeholders="Pilih Tahun Akademik"
+                                id="edit-period_id" name="period_id" required />
+                            <x-input-error class="mt-2" :messages="$errors->get('period_id')" />
+                        </div>
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -119,7 +134,7 @@
             $('#table-mk').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: '{{ route("dashboard.mata-kuliah.index") }}',
+                ajax: '{{ route('dashboard.mata-kuliah.index') }}',
                 columns: [{
                         data: 'prodi',
                         name: 'prodi',

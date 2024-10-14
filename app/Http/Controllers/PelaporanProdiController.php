@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\View\View;
 use Yajra\DataTables\Facades\DataTables;
-use Illuminate\Support\Str;
 
 class PelaporanProdiController extends Controller
 {
@@ -26,56 +25,53 @@ class PelaporanProdiController extends Controller
         confirmDelete($title, $text);
 
         if ($request->ajax()) {
-            $model = IKU7::where('user_id', auth()->user()->id)->with(['mataKuliah', 'periode'])->get();
+            $model = Course::where('department_id', auth()->user()->department_id)
+                ->with(['pelaporanIku', 'periode'])
+                ->get();
 
             return DataTables::of($model)
                 ->addIndexColumn()
                 ->addColumn('kodeMk', function ($row) {
-                    return $row->mataKuliah->code;
+                    return $row->code;
                 })
                 ->addColumn('namaMk', function ($row) {
-                    return $row->mataKuliah->name;
+                    return $row->name;
                 })
                 ->addColumn('periode', function ($row) {
                     return $row->periode->name;
                 })
                 ->addColumn('status', function ($row) {
-                    return '<span class="badge text-bg-' . StatusHelper::parseUserBadgeClassNameStatus($row->user->status) . '">
-                            ' . StatusHelper::parseUserStatus($row->user->status) . '
-                        </span>';
+                    return '<span class="badge text-bg-' .
+                                StatusHelper::parseUserBadgeClassNameStatus($row->pelaporanIku->status_verifikasi) .
+                            '">' . StatusHelper::parseUserBadgeClassNameStatus($row->pelaporanIku->status_verifikasi) . '</span>';
                 })
                 ->addColumn('action', function ($row) {
-                    // TODO: IF STATUS NOT PENDING, THEN DISABLE EDIT AND DELETE BUTTON
                     $btn =
                         '<div class="dropdown">
-                                    <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
-                                        data-bs-toggle="dropdown">
-                                        <i class="bx bx-dots-vertical-rounded"></i>
-                                    </button>
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item"
-                                            href="' .
+                        <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
+                            data-bs-toggle="dropdown">
+                            <i class="bx bx-dots-vertical-rounded"></i>
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="' .
                         route('dashboard.pelaporan-prodi.show', $row->id) .
                         '">
-                                            <i class="bx bxs-user-detail me-1"></i> Detail
-                                        </a>
-                                        <button class="dropdown-item btn-edit"
-                                             data-bs-toggle="modal" data-bs-target="#modal-edit-data" data-id="' .
+                                <i class="bx bxs-user-detail me-1"></i> Detail
+                            </a>
+                            <button class="dropdown-item btn-edit" data-bs-toggle="modal" data-bs-target="#modal-edit-data" data-id="' .
                         $row->id .
                         '" data-name="' .
                         $row->name .
                         '">
-                                            <i class="bx bx-edit-alt me-1"></i> Edit
-                                        </button>
-                                        <a class="dropdown-item"
-                                            href="' .
+                                <i class="bx bx-edit-alt me-1"></i> Edit
+                            </button>
+                            <a class="dropdown-item" href="' .
                         route('dashboard.pelaporan-prodi.destroy', $row->id) .
-                        '"
-                                            data-confirm-delete="true">
-                                            <i class="bx bx-trash me-1"></i> Delete
-                                        </a>
-                                    </div>
-                                </div>';
+                        '" data-confirm-delete="true">
+                                <i class="bx bx-trash me-1"></i> Delete
+                            </a>
+                        </div>
+                    </div>';
                     return $btn;
                 })
                 ->rawColumns(['status', 'action'])
@@ -107,7 +103,7 @@ class PelaporanProdiController extends Controller
             'grant_type' => 'refresh_token',
         ]);
 
-        $accessToken = json_decode((string)$response->getBody(), true)['access_token'];
+        $accessToken = json_decode((string) $response->getBody(), true)['access_token'];
 
         return $accessToken;
     }
@@ -118,7 +114,7 @@ class PelaporanProdiController extends Controller
     public function store(Request $request)
     {
         $accessToken = $this->token();
-        $folderId = config('services.google_drive.folder_id'); 
+        $folderId = config('services.google_drive.folder_id');
 
         $validatedData = $request->validate([
             'kode_mk' => ['required', 'string', 'max:10'],
@@ -151,10 +147,7 @@ class PelaporanProdiController extends Controller
                 'parents' => [$folderId],
             ];
 
-            $response = Http::withToken($accessToken)
-                ->attach('metadata', json_encode($fileMetadata), 'metadata.json')
-                ->attach('file', file_get_contents($path), $name)
-                ->post('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart');
+            $response = Http::withToken($accessToken)->attach('metadata', json_encode($fileMetadata), 'metadata.json')->attach('file', file_get_contents($path), $name)->post('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart');
 
             if ($response->successful()) {
                 $file_id = json_decode($response->body())->id;

@@ -29,7 +29,7 @@
             $('#table-pelaporan').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: '{{ route('dashboard.pelaporan-prodi.index') }}',
+                ajax: '{{ route("dashboard.pelaporan-prodi.index") }}',
                 columns: [
                     {
                         data: 'kodeMk',

@@ -20,4 +20,9 @@ class Period extends Model
     {
         return $this->hasMany(IKU7::class);
     }
+    
+    public function mataKuliah(): HasMany
+    {
+        return $this->hasMany(Course::class);
+    }
 }
