@@ -114,6 +114,12 @@
                             </select>
                             <x-input-error class="mt-2" :messages="$errors->get('status')" />
                         </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="deskripsi">Deskripsi Verifikasi</label>
+                            <input id="deskripsi" type="hidden" name="deskripsi" value="{{ old('deskripsi') }}">
+                            <trix-editor input="deskripsi"></trix-editor>
+                            <x-input-error class="mt-2" :messages="$errors->get('deskripsi')" />
+                        </div>
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -128,6 +134,10 @@
         @if ($errors->has('status'))
             $('#staticBackdrop').modal('show');
         @endif
+
+        document.addEventListener('trix-file-accept', (event) => {
+            event.preventDefault();
+        })
     </script>
 
 </x-dashboard-layout>

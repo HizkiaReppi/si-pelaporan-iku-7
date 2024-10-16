@@ -80,7 +80,7 @@ class PelaporanAdminController extends Controller
         $title = 'Apakah anda yakin?';
         $text = 'Anda tidak akan bisa mengembalikannya!';
         confirmDelete($title, $text);
-        
+
         $daftar_pelaporan->load('mataKuliah');
         return view('dashboard.pelaporan-admin.show', compact('daftar_pelaporan'));
     }
@@ -89,12 +89,18 @@ class PelaporanAdminController extends Controller
     {
         $validatedData = $request->validate([
             'status' => ['required', 'in:approved,rejected'],
+            'deskripsi' => ['nullable', 'string'],
         ]);
 
         DB::beginTransaction();
 
         try {
             $daftar_pelaporan->status_verifikasi = $validatedData['status'];
+
+            if (isset($validatedData['deskripsi'])) {
+                $daftar_pelaporan->description = $validatedData['deskripsi'];
+            }
+
             $daftar_pelaporan->save();
 
             DB::commit();
