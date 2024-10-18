@@ -10,6 +10,7 @@ use App\Models\Period;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -278,9 +279,6 @@ class PelaporanProdiController extends Controller
 
     public function updateRPS(Request $request, IKU7 $pelaporan)
     {
-        $accessToken = $this->token();
-        $folderId = config('services.google_drive.folder_id');
-
         $validatedData = $request->validate([
             'file_rps' => ['required', 'file', 'mimes:pdf', 'max:2048'],
         ]);
@@ -289,31 +287,31 @@ class PelaporanProdiController extends Controller
 
         try {
             $file = $request->file('file_rps');
-            $name = $pelaporan->mataKuliah->code . '_' . $pelaporan->mataKuliah->name . '_' . time() . '.' . $file->getClientOriginalExtension();
-            $path = $file->getRealPath();
 
-            $fileMetadata = [
-                'name' => $name,
-                'parents' => [$folderId],
-            ];
+            $fileName = time() . '_' . $pelaporan->mataKuliah->code . '_' . $pelaporan->mataKuliah->name . '.' . $file->getClientOriginalExtension();
 
-            $response = Http::withToken($accessToken)->attach('metadata', json_encode($fileMetadata), 'metadata.json')->attach('file', file_get_contents($path), $name)->post('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart');
+            $filePath = $file->storeAs('public/rps', $fileName);
+            $formattedFilePath = str_replace('public', 'storage', $filePath);
 
-            if ($response->successful()) {
-                $file_id = json_decode($response->body())->id;
-                
-                $pelaporan->file_rps = $file_id;
-                $pelaporan->save();
+            $pelaporan->file_rps = $formattedFilePath;
 
-                DB::commit();
-                return redirect()->route('dashboard.pelaporan-prodi.index')->with('toast_success', 'Data RPS Mata Kuliah berhasil disimpan.');
-            } else {
-                return redirect()->back()->with('toast_error', 'Gagal upload file RPS');
-            }
+            $pelaporan->save();
+
+            DB::commit();
+            return redirect()->route('dashboard.pelaporan-prodi.index')->with('toast_success', 'Data RPS Mata Kuliah berhasil disimpan.');
         } catch (\Exception $e) {
             DB::rollBack();
+            dd($e);
             return redirect()->back()->withInput()->with('toast_error', 'Terjadi kesalahan. Silakan coba lagi.');
         }
+    }
+
+    public function view(IKU7 $daftar_pelaporan): View
+    {
+        $daftar_pelaporan->load('mataKuliah');
+        $mimeType = mime_content_type($daftar_pelaporan->file_rps);
+
+        return view('dashboard.pelaporan-prodi.view', compact('daftar_pelaporan', 'mimeType'));
     }
 
     public function inputBobot(Course $mata_kuliah)

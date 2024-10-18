@@ -111,6 +111,14 @@ class PelaporanAdminController extends Controller
         }
     }
 
+    public function view(IKU7 $daftar_pelaporan): View
+    {
+        $daftar_pelaporan->load('mataKuliah');
+        $mimeType = mime_content_type($daftar_pelaporan->file_rps);
+        
+        return view('dashboard.pelaporan-admin.view', compact('daftar_pelaporan', 'mimeType'));
+    }
+
     /**
      * Remove the specified resource from storage.
      */

@@ -106,6 +106,7 @@ class CourseController extends Controller
             $course->code = $validatedData['kode-mk'];
             $course->name = $validatedData['nama-mk'];
             $course->department_id = $validatedData['department_id'];
+            $course->period_id = $validatedData['period_id'];
             $course->save();
 
             $iku = new IKU7();
@@ -119,6 +120,7 @@ class CourseController extends Controller
             return redirect()->route('dashboard.mata-kuliah.index')->with('toast_success', 'Mata Kuliah berhasil ditambahkan.');
         } catch (\Exception $e) {
             DB::rollBack();
+            dd($e);
             return redirect()->back()->withInput()->with('toast_error', 'Gagal menambahkan Mata Kuliah.');
         }
     }

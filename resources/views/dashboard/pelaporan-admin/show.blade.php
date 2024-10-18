@@ -69,7 +69,7 @@
                         UAS</label>
                     <div class="border p-2 rounded m-0">{!! $daftar_pelaporan->description_cognitive_uas !!}</div>
                 </div>
-                <div class="mb-3">
+                <div class="mb-3 col-md-6">
                     <label for="email" class="form-label">Status Verifikasi</label>
                     <p class="border p-2 rounded m-0">
                         <span
@@ -77,6 +77,11 @@
                             {{ \App\Helpers\StatusHelper::parseUserStatus($daftar_pelaporan->status_verifikasi) }}
                         </span>
                     </p>
+                </div>
+                <div class="mb-3 col-md-6">
+                    <label for="file" class="form-label">File RPS</label>
+                    <a href="{{ route('dashboard.pelaporan-prodi.view', $pelaporan->id) }}"
+                        class="d-block btn btn-secondary">Lihat File</a>
                 </div>
             </div>
         </div>

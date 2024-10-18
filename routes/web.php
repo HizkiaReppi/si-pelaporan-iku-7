@@ -49,9 +49,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('/pelaporan/{pelaporan}/update-rps', [PelaporanProdiController::class, 'updateRPS'])->name('dashboard.pelaporan-prodi.update-rps');
     Route::post('/pelaporan/{mata_kuliah}/input-bobot', [PelaporanProdiController::class, 'inputBobot'])->name('dashboard.pelaporan-prodi.input-bobot');
     Route::post('/pelaporan/{mata_kuliah}/input-deskripsi', [PelaporanProdiController::class, 'inputDeskripsi'])->name('dashboard.pelaporan-prodi.input-deskripsi');
+    Route::get('/pelaporan/view/{daftar_pelaporan}', [PelaporanProdiController::class, 'view'])->name('dashboard.pelaporan-prodi.view');
 
     Route::resource('/daftar-pelaporan', PelaporanAdminController::class)->names('dashboard.pelaporan-admin')->except('create', 'edit');
     Route::put('/daftar-pelaporan/{daftar_pelaporan}/update-verifikasi', [PelaporanAdminController::class, 'updateVerifikasi'])->name('dashboard.pelaporan-admin.update-verifikasi');
+    Route::get('/daftar-pelaporan/view/{daftar_pelaporan}', [PelaporanAdminController::class, 'view'])->name('dashboard.pelaporan-admin.view');
     Route::resource('/periode', PeriodController::class)->names('dashboard.periode');
     Route::resource('/fakultas', FacultyController::class)->names('dashboard.fakultas')->except('create', 'edit');
     Route::resource('/program-studi', DepartmentController::class)->names('dashboard.prodi')->except('create', 'edit', 'show');
