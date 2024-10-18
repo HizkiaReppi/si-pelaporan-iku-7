@@ -129,10 +129,10 @@ class DepartmentAdminController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Department $program_studi)
+    public function show(Department $admin_program_studi)
     {
-        $program_studi->load(['user', 'fakultas']);
-        return view('dashboard.admin-prodi.show', compact('program_studi'));
+        $admin_program_studi->load(['user', 'fakultas']);
+        return view('dashboard.admin-prodi.show', compact('admin_program_studi'));
     }
 
     /**
