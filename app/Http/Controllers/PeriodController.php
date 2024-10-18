@@ -50,6 +50,8 @@ class PeriodController extends Controller
                         $row->id .
                         '" data-name="' .
                         $row->name .
+                        '" data-code="' .
+                        $row->code .
                         '" data-start="' .
                         $row->start_date . 
                         '" data-end="' . 
@@ -81,6 +83,7 @@ class PeriodController extends Controller
     {
         $validatedData = $request->validate([
             'name' => ['required', 'string', 'max:255', 'min:2'],
+            'code' => ['required', 'string', 'max:50', 'min:2', 'unique:' . Period::class],
             'start_date' => ['required', 'date', 'before:end_date'],
             'end_date' => ['required', 'date', 'after:start_date'],
         ]);
@@ -89,6 +92,7 @@ class PeriodController extends Controller
 
         try {
             $period = new Period();
+            $period->code = $validatedData['code'];
             $period->name = $validatedData['name'];
             $period->start_date = $validatedData['start_date'];
             $period->end_date = $validatedData['end_date'];
@@ -107,16 +111,27 @@ class PeriodController extends Controller
      */
     public function update(Request $request, Period $periode): RedirectResponse
     {
-        $validatedData = $request->validate([
+        $rules = [
             'name' => ['required', 'string', 'max:255', 'min:2'],
             'start_date' => ['required', 'date', 'before:end_date'],
             'end_date' => ['required', 'date', 'after:start_date'],
-        ]);
+        ];
+
+        if ($periode->code != $request->code) {
+            $rules['code'] = ['required', 'string', 'max:50', 'min:2', 'unique:' . Period::class];
+        }
+
+        $validatedData = $request->validate($rules);
 
         DB::beginTransaction();
 
         try {
             $periode->name = $validatedData['name'];
+
+            if(isset($validatedData['code'])) {
+                $periode->code = $validatedData['code'];
+            }
+
             $periode->start_date = $validatedData['start_date'];
             $periode->end_date = $validatedData['end_date'];
 
@@ -125,6 +140,7 @@ class PeriodController extends Controller
             return redirect()->route('dashboard.periode.index')->with('toast_success', 'Periode berhasil diperbaharui.');
         } catch (\Exception $e) {
             DB::rollBack();
+            dd($e);
             return redirect()->back()->withInput()->with('toast_error', 'Gagal memperbaharui Periode.');
         }
     }

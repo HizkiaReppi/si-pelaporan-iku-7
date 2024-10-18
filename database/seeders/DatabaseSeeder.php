@@ -65,9 +65,10 @@ class DatabaseSeeder extends Seeder
 
         $period = Period::factory()->create([
             'id' => 1,
-            'name' => 'Ganjil 2024/2025',
-            'start_date' => '2024-10-11',
-            'end_date' => '2024-10-31',
+            'code' => '20232',
+            'name' => 'Genap 2023/2024',
+            'start_date' => '2024-2-5',
+            'end_date' => '2024-6-30',
         ]);
 
         $course = Course::factory()->create([
