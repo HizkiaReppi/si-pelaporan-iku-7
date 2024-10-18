@@ -1,22 +1,23 @@
-<x-dashboard-layout title="Tambah Data Admin Program Studi">
+<x-dashboard-layout title="Edit Data Admin Program Studi">
     <x-slot name="header">
-        Tambah Data Admin Program Studi
+        Edit Data Admin Program Studi
     </x-slot>
 
     <div class="card p-4">
-        <form method="post" action="{{ route('dashboard.admin-prodi.store') }}">
+        <form method="post" action="{{ route('dashboard.admin-prodi.update', $admin_program_studi->id) }}">
             @csrf
+            @method("PUT")
 
             <div class="mb-3">
                 <label for="faculty_id" class="form-label">Fakultas <span style="font-size:14px;color:red">*</span></label>
-                <x-select :options="$faculties" key="name" placeholders="Pilih Fakultas" id="faculty_id"
+                <x-select :options="$faculties" :value="$admin_program_studi->prodi->faculty_id" key="name" placeholders="Pilih Fakultas" id="faculty_id"
                     name="faculty_id" required />
                 <x-input-error class="mt-2" :messages="$errors->get('faculty_id')" />
             </div>
             <div class="mb-3">
                 <label for="department_id" class="form-label">Nama Program Studi <span
                         style="font-size:14px;color:red">*</span></label>
-                <x-select :options="$departments" key="name" placeholders="Pilih Program Studi" id="department_id"
+                <x-select :options="$departments" :value="$admin_program_studi->department_id" key="name" placeholders="Pilih Program Studi" id="department_id"
                     name="department_id" required />
                 <x-input-error class="mt-2" :messages="$errors->get('department_id')" />
             </div>
@@ -24,7 +25,7 @@
                 <label class="form-label" for="email">Email Program Studi <span
                         style="font-size:14px;color:red">*</span></label>
                 <input type="email" class="form-control {{ $errors->get('email') ? 'border-danger' : '' }}"
-                    id="email" name="email" placeholder="Email Program Studi" value="{{ old('email') }}"
+                    id="email" name="email" placeholder="Email Program Studi" value="{{ old('email', $admin_program_studi->email) }}"
                     autocomplete="email" required />
                 <x-input-error class="mt-2" :messages="$errors->get('email')" />
             </div>
@@ -51,7 +52,7 @@
                 <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
             </div>
             <div>
-                <button type="submit" class="btn btn-primary">Tambah Data</button>
+                <button type="submit" class="btn btn-primary">Edit Data</button>
                 <a href="{{ route('dashboard.admin-prodi.index') }}" class="btn btn-outline-secondary ms-2">Batal</a>
             </div>
         </form>

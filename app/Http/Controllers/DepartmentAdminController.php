@@ -124,10 +124,10 @@ class DepartmentAdminController extends Controller
             $user->save();
 
             DB::commit();
-            return redirect()->route('dashboard.admin-prodi.index')->with('toast_success', 'Program Studi berhasil ditambahkan');
+            return redirect()->route('dashboard.admin-prodi.index')->with('toast_success', 'Admin Program Studi berhasil ditambahkan');
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()->withInput()->with('toast_error', 'Gagal menambahkan Program Studi.');
+            return redirect()->back()->withInput()->with('toast_error', 'Gagal menambahkan Admin Program Studi.');
         }
     }
 
@@ -145,7 +145,11 @@ class DepartmentAdminController extends Controller
      */
     public function edit(User $admin_program_studi)
     {
-        //
+        $faculties = Faculty::all();
+        $departments = Department::all();
+
+        $admin_program_studi->load('prodi');
+        return view('dashboard.admin-prodi.edit', compact('faculties', 'departments', 'admin_program_studi'));
     }
 
     /**
@@ -153,7 +157,39 @@ class DepartmentAdminController extends Controller
      */
     public function update(Request $request, User $admin_program_studi)
     {
-        //
+        $rules = [
+            'department_id' => ['required', 'exists:' . Department::class . ',id'],
+            'email' => ['required', 'string', 'email', 'max:255', 'min:4', 'unique:' . User::class],
+            'faculty_id' => ['required', 'exists:' . Faculty::class . ',id'],
+        ];
+
+        if ($request->password) {
+            $rules['password'] = ['required', 'confirmed', Rules\Password::defaults()];
+        }
+
+        $validatedData = $request->validate($rules);
+
+        DB::beginTransaction();
+
+        try {
+            $department = Department::where('id', $validatedData['department_id'])->first();
+
+            $admin_program_studi->name = $department->name;
+            $admin_program_studi->email = $validatedData['email'];
+            $admin_program_studi->department_id = $validatedData['department_id'];
+
+            if(isset($validatedData['password'])) {
+                $admin_program_studi->password = Hash::make($validatedData['password']);
+            }
+
+            $admin_program_studi->save();
+
+            DB::commit();
+            return redirect()->route('dashboard.admin-prodi.index')->with('toast_success', 'Admin Program Studi berhasil diperbaharui');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withInput()->with('toast_error', 'Gagal memperbaharui Admin Program Studi.');
+        }
     }
 
     /**
@@ -189,6 +225,16 @@ class DepartmentAdminController extends Controller
      */
     public function destroy(User $admin_program_studi)
     {
-        //
+        DB::beginTransaction();
+
+        try {
+            $admin_program_studi->delete();
+            DB::commit();
+
+            return redirect()->route('dashboard.admin-prodi.index')->with('toast_success', 'Admin Program Studi Berhasil Dihapus');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withInput()->with('toast_error', 'Gagal menghapus Admin Program Studi.');
+        }
     }
 }
