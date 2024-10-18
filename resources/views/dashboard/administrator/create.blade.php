@@ -15,13 +15,6 @@
                 <x-input-error class="mt-2" :messages="$errors->get('fullname')" />
             </div>
             <div class="mb-3">
-                <label class="form-label" for="username">Username</label>
-                <input type="text" class="form-control {{ $errors->get('username') ? 'border-danger' : '' }}"
-                    id="username" name="username" placeholder="Username" value="{{ old('username') }}"
-                    autocomplete="username" required />
-                <x-input-error class="mt-2" :messages="$errors->get('username')" />
-            </div>
-            <div class="mb-3">
                 <label class="form-label" for="email">Email</label>
                 <input type="email" class="form-control {{ $errors->get('email') ? 'border-danger' : '' }}"
                     id="email" name="email" placeholder="Email" value="{{ old('email') }}" autocomplete="email"
@@ -50,15 +43,6 @@
                     <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
                 </div>
                 <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-            </div>
-            <div class="mb-3">
-                <label for="foto" class="form-label">Foto (Opsional)</label>
-                <img class="img-preview img-thumbnail rounded" style="width: 300px; height: auto;">
-                <input class="form-control" type="file" id="foto" name="foto" accept=".png, .jpg, .jpeg" />
-                <x-input-error class="mt-2" :messages="$errors->get('foto')" />
-                <div id="form-help" class="form-text">
-                    <small>PNG, JPG atau JPEG (Max. 2 MB).</small>
-                </div>
             </div>
             <div>
                 <button type="submit" class="btn btn-primary">Tambah Data</button>
