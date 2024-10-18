@@ -23,7 +23,6 @@ class AdminUpdateRequest extends FormRequest
     public function rules(): array
     {
         $isEmailExist = User::where('email', $this->email)->exists();
-        $isUsernameExist = User::where('username', $this->username)->exists();
 
         $rules = [
             'fullname' => ['required', 'string', 'max:255', 'min:2', 'regex:/^[a-zA-Z\s]*$/'],
@@ -33,16 +32,8 @@ class AdminUpdateRequest extends FormRequest
             $rules['email'] = ['required', 'string', 'email', 'max:255', 'min:4', 'unique:users,email'];
         }
 
-        if ($this->username && !$isUsernameExist) {
-            $rules['username'] = ['required', 'string', 'max:255', 'min:2', 'unique:users,username', 'regex:/^[a-zA-Z][a-zA-Z0-9]*$/'];
-        }
-
         if ($this->password) {
             $rules['password'] = ['required', 'string', 'confirmed', 'min:8', 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/'];
-        }
-
-        if ($this->foto) {
-            $rules['foto'] = ['nullable', 'image', 'mimes:png,jpg,jpeg', 'max:2048'];
         }
 
         return $rules;
@@ -55,8 +46,6 @@ class AdminUpdateRequest extends FormRequest
     {
         return [
             'fullname.regex' => 'The name field must be alphabet.',
-            'username.unique' => 'The username is already taken.',
-            'username.regex' => 'The username field must be alphabet and number.',
             'password.regex' => 'The password field must be at least 8 characters, one uppercase, one lowercase, one number, and one special character.',
             'email.unique' => 'The email is already taken.',
             'email.regex' => 'The email field must be a valid email.',
