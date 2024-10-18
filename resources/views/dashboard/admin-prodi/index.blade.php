@@ -14,6 +14,7 @@
                     <tr>
                         <th class="text-center">Nama</th>
                         <th class="text-center">Fakultas</th>
+                        <th class="text-center">Email</th>
                         <th class="text-center">Status</th>
                         <th class="text-center">Aksi</th>
                     </tr>
@@ -36,6 +37,10 @@
                     {
                         data: 'fakultas',
                         name: 'fakultas',
+                    },
+                    {
+                        data: 'email',
+                        name: 'email',
                     },
                     {
                         data: 'status',

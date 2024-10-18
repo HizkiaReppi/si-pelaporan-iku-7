@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\StatusHelper;
+use App\Mail\VerifiedDepartmentUserMail;
 use App\Models\Department;
 use App\Models\Faculty;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Validation\Rules;
@@ -35,6 +37,9 @@ class DepartmentAdminController extends Controller
                 ->addColumn('fakultas', function ($row) {
                     return $row->prodi->fakultas->name;
                 })
+                ->addColumn('email', function ($row) {
+                    return $row->email;
+                })
                 ->addColumn('status', function ($row) {
                     return '<span class="badge text-bg-' .
                         StatusHelper::parseUserBadgeClassNameStatus($row->status) .
@@ -54,18 +59,18 @@ class DepartmentAdminController extends Controller
                                     <div class="dropdown-menu">
                                         <a class="dropdown-item"
                                             href="' .
-                        route('dashboard.admin-prodi.show', $row->prodi->id) .
+                        route('dashboard.admin-prodi.show', $row->id) .
                         '">
                                             <i class="bx bxs-user-detail me-1"></i> Detail
                                         </a>
                                         <a href="' .
-                        route('dashboard.admin-prodi.edit', $row->prodi->id) .
+                        route('dashboard.admin-prodi.edit', $row->id) .
                         '" class="dropdown-item btn-edit">
                                             <i class="bx bx-edit-alt me-1"></i> Edit
                                         </a>
                                         <a class="dropdown-item"
                                             href="' .
-                        route('dashboard.admin-prodi.destroy', $row->prodi->id) .
+                        route('dashboard.admin-prodi.destroy', $row->id) .
                         '"
                                             data-confirm-delete="true">
                                             <i class="bx bx-trash me-1"></i> Delete
@@ -129,16 +134,16 @@ class DepartmentAdminController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Department $admin_program_studi)
+    public function show(User $admin_program_studi)
     {
-        $admin_program_studi->load(['user', 'fakultas']);
+        $admin_program_studi->load(['prodi', 'prodi.fakultas']);
         return view('dashboard.admin-prodi.show', compact('admin_program_studi'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Department $department)
+    public function edit(User $admin_program_studi)
     {
         //
     }
@@ -146,7 +151,7 @@ class DepartmentAdminController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Department $department)
+    public function update(Request $request, User $admin_program_studi)
     {
         //
     }
@@ -154,7 +159,7 @@ class DepartmentAdminController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function updateStatus(Request $request, Department $program_studi)
+    public function updateStatus(Request $request, User $program_studi)
     {
         $validatedData = $request->validate([
             'status' => ['required', 'in:pending,approved,rejected'],
@@ -163,8 +168,10 @@ class DepartmentAdminController extends Controller
         DB::beginTransaction();
 
         try {
-            $program_studi->user->status = $validatedData['status'];
-            $program_studi->user->save();
+            $program_studi->status = $validatedData['status'];
+            $program_studi->save();
+
+            Mail::to($program_studi->email)->send(new VerifiedDepartmentUserMail($program_studi));
 
             DB::commit();
             return redirect()
@@ -172,6 +179,7 @@ class DepartmentAdminController extends Controller
                 ->with('toast_success', 'Status Akun Program Studi berhasil diperbaharui');
         } catch (\Exception $e) {
             DB::rollBack();
+            dd($e);
             return redirect()->back()->withInput()->with('toast_error', 'Gagal memperbaharui status akun Program Studi.');
         }
     }
@@ -179,7 +187,7 @@ class DepartmentAdminController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Department $department)
+    public function destroy(User $admin_program_studi)
     {
         //
     }
