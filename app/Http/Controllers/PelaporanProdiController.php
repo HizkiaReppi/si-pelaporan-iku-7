@@ -309,7 +309,9 @@ class PelaporanProdiController extends Controller
     public function view(IKU7 $daftar_pelaporan): View
     {
         $daftar_pelaporan->load('mataKuliah');
-        $mimeType = mime_content_type($daftar_pelaporan->file_rps);
+        $filePath = str_replace('/storage', 'public', $daftar_pelaporan->file_rps);
+        $filePath = storage_path("app/" . $filePath);
+        $mimeType = mime_content_type($filePath);
 
         return view('dashboard.pelaporan-prodi.view', compact('daftar_pelaporan', 'mimeType'));
     }
