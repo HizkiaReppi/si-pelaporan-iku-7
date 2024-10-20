@@ -291,7 +291,7 @@ class PelaporanProdiController extends Controller
             $fileName = time() . '_' . $pelaporan->mataKuliah->code . '_' . $pelaporan->mataKuliah->name . '.' . $file->getClientOriginalExtension();
 
             $filePath = $file->storeAs('public/rps', $fileName);
-            $formattedFilePath = str_replace('public', 'storage', $filePath);
+            $formattedFilePath = str_replace('public', '/storage', $filePath);
 
             $pelaporan->file_rps = $formattedFilePath;
 
