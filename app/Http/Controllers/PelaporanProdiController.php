@@ -286,6 +286,12 @@ class PelaporanProdiController extends Controller
         DB::beginTransaction();
 
         try {
+            if ($pelaporan->file_rps) {
+                $filePath = str_replace('/storage', 'public', $pelaporan->file_rps);
+                $filePath = storage_path("app/" . $filePath);
+                Storage::delete($filePath);
+            }
+
             $file = $request->file('file_rps');
             $formattedCourseName = str_replace(' ', '-', strtolower($pelaporan->mataKuliah->name));
             $fileName = time() . '_' . $pelaporan->mataKuliah->code . '_' . $formattedCourseName . '.' . $file->getClientOriginalExtension();
