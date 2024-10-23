@@ -88,7 +88,7 @@ class PelaporanAdminController extends Controller
     public function updateVerifikasi(Request $request, IKU7 $daftar_pelaporan)
     {
         $validatedData = $request->validate([
-            'status' => ['required', 'in:approved,rejected'],
+            'status' => ['required', 'in:approved,rejected,draft'],
             'deskripsi' => ['nullable', 'string'],
         ]);
 
@@ -98,7 +98,11 @@ class PelaporanAdminController extends Controller
             $daftar_pelaporan->status_verifikasi = $validatedData['status'];
 
             if (isset($validatedData['deskripsi'])) {
-                $daftar_pelaporan->description = $validatedData['deskripsi'];
+                $daftar_pelaporan->deskripsi_verifikasi = $validatedData['deskripsi'];
+            }
+            
+            if($validatedData['status'] == 'approved' && !isset($validatedData['deskripsi'])) {
+                $daftar_pelaporan->deskripsi_verifikasi = null;
             }
 
             $daftar_pelaporan->save();

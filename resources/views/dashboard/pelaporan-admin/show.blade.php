@@ -80,8 +80,8 @@
                 </div>
                 <div class="mb-3 col-md-6">
                     <label for="file" class="form-label">File RPS</label>
-                    @if ($pelaporan->file_rps)
-                        <a href="{{ route('dashboard.pelaporan-prodi.view', $pelaporan->id) }}"
+                    @if ($daftar_pelaporan->file_rps)
+                        <a href="{{ route('dashboard.pelaporan-prodi.view', $daftar_pelaporan->id) }}"
                             class="d-block btn btn-secondary">Lihat File</a>
                     @else
                         <button class="d-block btn btn-secondary" type="button" disabled>
@@ -91,7 +91,7 @@
                 </div>
                 <div class="mb-3">
                     <label for="deskripsi-verifikasi" class="form-label">Deskripsi Verifikasi</label>
-                    <div class="border p-2 rounded m-0">{!! $pelaporan->deskripsi_verifikasi ?? '-' !!}</div>
+                    <div class="border p-2 rounded m-0">{!! $daftar_pelaporan->deskripsi_verifikasi ?? '-' !!}</div>
                 </div>
             </div>
         </div>
