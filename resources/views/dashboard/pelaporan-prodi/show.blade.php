@@ -80,8 +80,14 @@
                 </div>
                 <div class="mb-3 col-md-6">
                     <label for="file" class="form-label">File RPS</label>
-                    <a href="{{ route('dashboard.pelaporan-prodi.view', $pelaporan->id) }}"
-                        class="d-block btn btn-secondary">Lihat File</a>
+                    @if ($pelaporan->file_rps)
+                        <a href="{{ route('dashboard.pelaporan-prodi.view', $pelaporan->id) }}"
+                            class="d-block btn btn-secondary">Lihat File</a>
+                    @else
+                        <button class="d-block btn btn-secondary" type="button" disabled>
+                            Belum Ada File
+                        </button>
+                    @endif
                 </div>
                 <div class="mb-3">
                     <label for="deskripsi-verifikasi" class="form-label">Deskripsi Verifikasi</label>
