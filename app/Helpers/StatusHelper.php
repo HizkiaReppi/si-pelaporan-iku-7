@@ -16,6 +16,7 @@ class StatusHelper
             'pending' => 'Menunggu Persetujuan',
             'done' => 'Disetujui',
             'rejected' => 'Ditolak',
+            'draft' => 'Draft'
         ];
 
         return $statuses[$status] ?? $status;
@@ -33,6 +34,7 @@ class StatusHelper
             'pending' => 'info',
             'approved' => 'success',
             'rejected' => 'danger',
+            'draft' => 'secondary'
         ];
 
         return $classes[$type] ?? 'info';

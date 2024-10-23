@@ -30,7 +30,7 @@ return new class extends Migration
             $table->text('description_cognitive_uts')->nullable();
             $table->text('description_cognitive_uas')->nullable();
             $table->string('file_rps')->nullable();
-            $table->enum('status_verifikasi', ['pending', 'approved', 'rejected'])->default('pending');
+            $table->enum('status_verifikasi', ['pending', 'approved', 'rejected', 'draft'])->default('draft');
             $table->text('deskripsi_verifikasi')->nullable();
             $table->timestamps();
         });
