@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CourseClassController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DepartmentAdminController;
@@ -65,6 +66,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('/profile/student', [ProfileController::class, 'update_student'])->name('profile.update.student');
     Route::patch('/profile/lecturer', [ProfileController::class, 'update_lecturer'])->name('profile.update.lecturer');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Comming Soon
+    Route::get('/kelas-mata-kuliah', [CourseClassController::class, 'index'])->name('dashboard.kelas-mata-kuliah.index');
+    Route::get('/kelas-mata-kuliah/daftar-nilai', [CourseClassController::class, 'index'])->name('dashboard.kelas-mata-kuliah.daftar-nilai.index');
 });
 
 require __DIR__ . '/auth.php';

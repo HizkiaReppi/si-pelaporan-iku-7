@@ -48,6 +48,24 @@
                     </li>
                 </ul>
             </li>
+            <li class="menu-item {{ request()->routeIs('dashboard.kelas-mata-kuliah.*') ? 'active open' : '' }}">
+                <a href="javascript:void(0);" class="menu-link menu-toggle">
+                    <i class="menu-icon tf-icons fa-solid fa-table-list"></i>
+                    <div data-i18n="Bimbingan">Kelas Mata Kuliah</div>
+                </a>
+                <ul class="menu-sub">
+                    <li class="menu-item {{ request()->routeIs('dashboard.kelas-mata-kuliah.index') ? 'active' : '' }}">
+                        <a href="{{ route('dashboard.kelas-mata-kuliah.index') }}" class="menu-link">
+                            <div data-i18n="Daftar Mata Kuliah">Daftar Mata Kuliah</div>
+                        </a>
+                    </li>
+                    <li class="menu-item {{ request()->routeIs('dashboard.kelas-mata-kuliah.daftar-nilai.index') ? 'active' : '' }}">
+                        <a href="{{ route('dashboard.kelas-mata-kuliah.daftar-nilai.index') }}" class="menu-link">
+                            <div data-i18n="Daftar Mata Kuliah">Generate Daftar Nilai</div>
+                        </a>
+                    </li>
+                </ul>
+            </li>
         @elsecanany(['admin', 'super-admin'])
             <li class="menu-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
                 <a href="{{ route('dashboard') }}" class="menu-link">
@@ -124,8 +142,8 @@
                             @csrf
                             <label class="form-label" for="course_id">Mata Kuliah <span
                                     style="font-size:14px;color:red">*</span></label>
-                            <x-select :options="$courses" key="name" placeholders="Pilih Mata Kuliah" id="course_deskripsi"
-                                name="course_id" required />
+                            <x-select :options="$courses" key="name" placeholders="Pilih Mata Kuliah"
+                                id="course_deskripsi" name="course_id" required />
                         </form>
                     </div>
                 </div>
