@@ -199,24 +199,41 @@ class PelaporanProdiController extends Controller
         }
 
         $validatedData = $request->validate([
-            'deskripsi_penilaian_case_method' => ['required', 'string'],
-            'deskripsi_penilaian_project_based' => ['required', 'string'],
-            'deskripsi_penilaian_kognitif_tugas' => ['required', 'string'],
-            'deskripsi_penilaian_kognitif_kuis' => ['required', 'string'],
-            'deskripsi_penilaian_kognitif_uts' => ['required', 'string'],
-            'deskripsi_penilaian_kognitif_uas' => ['required', 'string'],
+            'deskripsi_penilaian_case_method' => ['nullable', 'string'],
+            'deskripsi_penilaian_project_based' => ['nullable', 'string'],
+            'deskripsi_penilaian_kognitif_tugas' => ['nullable', 'string'],
+            'deskripsi_penilaian_kognitif_kuis' => ['nullable', 'string'],
+            'deskripsi_penilaian_kognitif_uts' => ['nullable', 'string'],
+            'deskripsi_penilaian_kognitif_uas' => ['nullable', 'string'],
             'file_rps' => ['required', 'file', 'mimes:pdf', 'max:2048'],
         ]);
 
         DB::beginTransaction();
 
         try {
-            $pelaporan->description_case_method = $validatedData['deskripsi_penilaian_case_method'];
-            $pelaporan->description_project_based = $validatedData['deskripsi_penilaian_project_based'];
-            $pelaporan->description_cognitive_task = $validatedData['deskripsi_penilaian_kognitif_tugas'];
-            $pelaporan->description_cognitive_quiz = $validatedData['deskripsi_penilaian_kognitif_kuis'];
-            $pelaporan->description_cognitive_uts = $validatedData['deskripsi_penilaian_kognitif_uts'];
-            $pelaporan->description_cognitive_uas = $validatedData['deskripsi_penilaian_kognitif_uas'];
+            if(isset($validatedData['deskripsi_penilaian_case_method'])) {
+                $pelaporan->description_case_method = $validatedData['deskripsi_penilaian_case_method'];
+            }
+
+            if(isset($validatedData['deskripsi_penilaian_project_based'])) {
+                $pelaporan->description_project_based = $validatedData['deskripsi_penilaian_project_based'];
+            }
+
+            if(isset($validatedData['deskripsi_penilaian_kognitif_tugas'])) {
+                $pelaporan->description_cognitive_task = $validatedData['deskripsi_penilaian_kognitif_tugas'];
+            }
+
+            if(isset($validatedData['deskripsi_penilaian_kognitif_kuis'])) {
+                $pelaporan->description_cognitive_quiz = $validatedData['deskripsi_penilaian_kognitif_kuis'];
+            }
+
+            if(isset($validatedData['deskripsi_penilaian_kognitif_uts'])) {
+                $pelaporan->description_cognitive_uts = $validatedData['deskripsi_penilaian_kognitif_uts'];
+            }
+
+            if(isset($validatedData['deskripsi_penilaian_kognitif_uas'])) {
+                $pelaporan->description_cognitive_uas = $validatedData['deskripsi_penilaian_kognitif_uas'];
+            }
 
             if ($pelaporan->file_rps) {
                 $filePath = str_replace('/storage', 'public', $pelaporan->file_rps);
