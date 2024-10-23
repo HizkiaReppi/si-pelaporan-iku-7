@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\PeriodHelper;
 use App\Helpers\StatusHelper;
 use App\Models\Course;
 use App\Models\IKU7;
@@ -22,7 +23,7 @@ class PelaporanAdminController extends Controller
         confirmDelete($title, $text);
 
         if ($request->ajax()) {
-            $model = Course::with(['pelaporanIku', 'periode', 'prodi'])->get();
+            $model = Course::where('period_id', PeriodHelper::getCurrentPeriod())->with(['pelaporanIku', 'periode', 'prodi'])->get();
 
             return DataTables::of($model)
                 ->addIndexColumn()

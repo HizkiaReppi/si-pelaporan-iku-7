@@ -1,26 +1,18 @@
 <?php
 
+use App\Helpers\PeriodHelper;
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\AnnouncementController;
-use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CourseClassController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DepartmentAdminController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\FacultyController;
-use App\Http\Controllers\HeadOfDepartmentController;
-use App\Http\Controllers\LecturerController;
 use App\Http\Controllers\PelaporanAdminController;
 use App\Http\Controllers\PelaporanProdiController;
 use App\Http\Controllers\PeriodController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\StudentChartController;
-use App\Http\Controllers\StudentController;
-use App\Http\Controllers\SubmissionChartController;
-use App\Http\Controllers\SubmissionController;
-use App\Http\Controllers\SubmissionStudentController;
-use App\Models\Faculty;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -66,6 +58,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('/profile/student', [ProfileController::class, 'update_student'])->name('profile.update.student');
     Route::patch('/profile/lecturer', [ProfileController::class, 'update_lecturer'])->name('profile.update.lecturer');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::post('/update-period/{id}', function (Request $request, $id) {
+        PeriodHelper::setCurrentPeriod($id);
+        return response()->json(['message' => 'Period updated successfully']);
+    });
 
     // Comming Soon
     Route::get('/kelas-mata-kuliah', [CourseClassController::class, 'index'])->name('dashboard.kelas-mata-kuliah.index');

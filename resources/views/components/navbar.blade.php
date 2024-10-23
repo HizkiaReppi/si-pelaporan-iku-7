@@ -9,7 +9,7 @@
     <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
         <ul class="navbar-nav flex-row align-items-center ms-auto">
             <li class="nav-item dropdown me-2">
-                <select class="form-select form-select-sm" aria-label="Small select example">
+                <select class="form-select form-select-sm" id="period-select">
                     @foreach ($periods as $period)
                         <option value="{{ $period->id }}" {{ $period->id == $currentPeriodId ? 'selected' : '' }}>
                             Periode {{ $period->name }}
@@ -109,3 +109,27 @@
         </ul>
     </div>
 </nav>
+
+<script>
+    document.getElementById('period-select').addEventListener('change', function() {
+        this.disabled = true;
+
+        let selectedPeriodId = this.value;
+
+        fetch(`/update-period/${selectedPeriodId}`, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                period_id: selectedPeriodId
+            })
+        }).then(() => {
+            window.location.reload();
+        }).catch((error) => {
+            console.error('Error updating period:', error);
+            this.disabled = false;
+        });
+    });
+</script>

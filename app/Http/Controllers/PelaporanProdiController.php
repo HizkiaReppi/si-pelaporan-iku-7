@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\IKUHelper;
+use App\Helpers\PeriodHelper;
 use App\Helpers\StatusHelper;
 use App\Models\Course;
 use App\Models\IKU7;
@@ -26,7 +27,7 @@ class PelaporanProdiController extends Controller
         confirmDelete($title, $text);
 
         if ($request->ajax()) {
-            $model = Course::where('department_id', auth()->user()->department_id)
+            $model = Course::where('period_id', PeriodHelper::getCurrentPeriod())->where('department_id', auth()->user()->department_id)
                 ->with(['pelaporanIku', 'periode'])
                 ->get();
 
