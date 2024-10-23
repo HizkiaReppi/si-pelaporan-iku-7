@@ -83,6 +83,10 @@
                     <a href="{{ route('dashboard.pelaporan-prodi.view', $pelaporan->id) }}"
                         class="d-block btn btn-secondary">Lihat File</a>
                 </div>
+                <div class="mb-3">
+                    <label for="deskripsi-verifikasi" class="form-label">Deskripsi Verifikasi</label>
+                    <div class="border p-2 rounded m-0">{!! $pelaporan->deskripsi_verifikasi ?? '-' !!}</div>
+                </div>
             </div>
         </div>
         <div class="d-flex gap-2 mb-4 ms-3" style="margin-top: -15px">
@@ -115,7 +119,7 @@
                             <select class="form-select" id="status" name="status">
                                 <option selected>Pilih Status Verifikasi</option>
                                 <option value="approved">Setujui</option>
-                                <option value="rejected">Perlu Perbaikan</option>
+                                <option value="draft">Perlu Perbaikan</option>
                             </select>
                             <x-input-error class="mt-2" :messages="$errors->get('status')" />
                         </div>

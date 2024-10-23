@@ -83,61 +83,25 @@
                     <a href="{{ route('dashboard.pelaporan-prodi.view', $pelaporan->id) }}"
                         class="d-block btn btn-secondary">Lihat File</a>
                 </div>
+                <div class="mb-3">
+                    <label for="deskripsi-verifikasi" class="form-label">Deskripsi Verifikasi</label>
+                    <div class="border p-2 rounded m-0">{!! $pelaporan->deskripsi_verifikasi ?? '-' !!}</div>
+                </div>
             </div>
         </div>
         <div class="d-flex gap-2 mb-4 ms-3" style="margin-top: -15px">
             <a href="{{ route('dashboard.pelaporan-prodi.index') }}" class="btn btn-outline-secondary ms-2">Kembali</a>
-            @if ($pelaporan->status_verifikasi == 'pending')
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                    Edit RPS
-                </button>
+            @if ($pelaporan->status_verifikasi == 'draft')
                 <a class="btn btn-info" href="{{ route('dashboard.pelaporan-prodi.edit-bobot', $pelaporan->id) }}">
                     Edit Bobot
                 </a>
-                <a class="btn btn-info" href="{{ route('dashboard.pelaporan-prodi.edit-deskripsi', $pelaporan->id) }}">
-                    Edit Deskripsi
-                </a>
+                @if (\App\Helpers\IKUHelper::scoresAreFilled($pelaporan))
+                    <a class="btn btn-info"
+                        href="{{ route('dashboard.pelaporan-prodi.edit-deskripsi', $pelaporan->id) }}">
+                        Edit Deskripsi
+                    </a>
+                @endif
             @endif
         </div>
     </div>
-
-    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-        aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="modalEditDataLabel">Edit RPS Mata Kuliah
-                        {{ $pelaporan->mataKuliah->name }}</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="edit-rps" method="post"
-                        action="{{ route('dashboard.pelaporan-prodi.update-rps', $pelaporan->id) }}"
-                        enctype="multipart/form-data">
-                        @csrf
-                        @method('put')
-                        <div class="mb-3">
-                            <label class="form-label" for="file_rps">File RPS <span
-                                    style="font-size:14px;color:red">*</span></label>
-                            <input type="file"
-                                class="form-control {{ $errors->has('file_rps') ? 'border-danger' : '' }}"
-                                id="file_rps" name="file_rps" accept="application/pdf" required>
-                            <x-input-error class="mt-2" :messages="$errors->get('file_rps')" />
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-primary" form="edit-rps">Simpan RPS</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        @if ($errors->has('file_rps'))
-            $('#staticBackdrop').modal('show');
-        @endif
-    </script>
-
 </x-dashboard-layout>

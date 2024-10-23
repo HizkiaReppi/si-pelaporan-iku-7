@@ -33,19 +33,6 @@
                             <div data-i18n="Daftar Mata Kuliah">Daftar Mata Kuliah</div>
                         </a>
                     </li>
-                    <li class="menu-item {{ request()->routeIs('dashboard.pelaporan-prodi.edit-bobot') ? 'active' : '' }}">
-                        <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#modal-bobot"
-                            class="menu-link">
-                            <div data-i18n="Input Bobot Mata Kuliah">Input Bobot Mata Kuliah</div>
-                        </a>
-                    </li>
-                    <li
-                        class="menu-item {{ request()->routeIs('dashboard.pelaporan-prodi.edit-deskripsi') ? 'active' : '' }}">
-                        <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#modal-deskripsi"
-                            class="menu-link">
-                            <div data-i18n="Input Deskripsi Mata Kuliah">Input Deskripsi Mata Kuliah</div>
-                        </a>
-                    </li>
                 </ul>
             </li>
             <li class="menu-item {{ request()->routeIs('dashboard.kelas-mata-kuliah.*') ? 'active open' : '' }}">
