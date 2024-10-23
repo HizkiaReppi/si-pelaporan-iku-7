@@ -4,7 +4,9 @@
     </x-slot>
 
     <div class="card p-4">
-        <form class="row" method="post" action="{{ route('dashboard.pelaporan-prodi.update-deskripsi', $pelaporan->id) }}">
+        <form class="row" method="post"
+            action="{{ route('dashboard.pelaporan-prodi.update-deskripsi', $pelaporan->id) }}"
+            enctype="multipart/form-data">
             @csrf
             @method('put')
 
@@ -63,6 +65,13 @@
                     value="{{ old('deskripsi_penilaian_kognitif_uas', $pelaporan->description_cognitive_uas) }}">
                 <trix-editor input="deskripsi_penilaian_kognitif_uas"></trix-editor>
                 <x-input-error class="mt-2" :messages="$errors->get('deskripsi_penilaian_kognitif_uas')" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="file_rps">File RPS <span
+                        style="font-size:14px;color:red">*</span></label>
+                <input type="file" class="form-control {{ $errors->has('file_rps') ? 'border-danger' : '' }}"
+                    id="file_rps" name="file_rps" accept="application/pdf" required>
+                <x-input-error class="mt-2" :messages="$errors->get('file_rps')" />
             </div>
             <div>
                 <button type="submit" class="btn btn-primary">Simpan Data</button>
