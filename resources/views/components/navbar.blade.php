@@ -8,6 +8,15 @@
 
     <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
         <ul class="navbar-nav flex-row align-items-center ms-auto">
+            <li class="nav-item dropdown me-2">
+                <select class="form-select form-select-sm" aria-label="Small select example">
+                    @foreach ($periods as $period)
+                        <option value="{{ $period->id }}" {{ $period->id == $currentPeriodId ? 'selected' : '' }}>
+                            Periode {{ $period->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </li>
             {{-- Notif --}}
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle hide-arrow position-relative" href="javascript:void(0);"

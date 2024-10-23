@@ -2,8 +2,10 @@
 
 namespace App\View\Components;
 
+use App\Helpers\PeriodHelper;
 use Illuminate\View\Component;
 use App\Models\User;
+use App\Models\Period;
 
 class Navbar extends Component
 {
@@ -24,14 +26,25 @@ class Navbar extends Component
 
             $this->registrationsCount = $this->registrations->count();
         }
-
     }
 
     public function render()
     {
+        $periods = Period::all();
+
+        $currentPeriodId = null;
+        if(PeriodHelper::getCurrentPeriod() == null) {
+            PeriodHelper::setCurrentPeriod($periods->first()->id);
+            $currentPeriodId = $periods->first()->id;
+        } else {
+            $currentPeriodId = PeriodHelper::getCurrentPeriod();
+        }
+
         return view('components.navbar', [
             'registrations' => $this->registrations,
-            'registrationsCount' => $this->registrationsCount
+            'registrationsCount' => $this->registrationsCount,
+            'periods' => $periods,
+            'currentPeriodId' => $currentPeriodId
         ]);
     }
 }
