@@ -3,13 +3,7 @@
         Profil Saya
     </x-slot>
 
-    @if ($user->role == 'admin')
-        @include('profile.partials.update-profile-information-form-admin')
-    @elseif($user->user->role == 'student')
-        @include('profile.partials.update-profile-information-form-student')
-    @elseif($user->user->role == 'lecturer' || $user->user->role == 'HoD')
-        @include('profile.partials.update-profile-information-form-lecturer')
-    @endif
+    @include('profile.partials.update-profile-information-form-admin')
 
     @include('profile.partials.update-password-form')
 

@@ -14,7 +14,6 @@
                     <tr>
                         <th class="text-center">No.</th>
                         <th class="text-center">Nama</th>
-                        <th class="text-center">Username</th>
                         <th class="text-center">Email</th>
                         <th class="text-center">Terakhir Dilihat</th>
                         <th class="text-center">Aksi</th>
@@ -25,7 +24,6 @@
                         <tr>
                             <td class="text-center">{{ $loop->iteration }}</td>
                             <td class="text-center">{{ $administrator->name }}</td>
-                            <td class="text-center">{{ $administrator->username }}</td>
                             <td class="text-center">{{ $administrator->email }}</td>
                             <td class="text-center">
                                 @if ($administrator->isOnline())

@@ -23,10 +23,6 @@
                     <p class="border p-2 rounded m-0">{{ $administrator->name }}</p>
                 </div>
                 <div class="mb-3 col-md-12">
-                    <label for="username" class="form-label">Username</label>
-                    <p class="border p-2 rounded m-0">{{ $administrator->username }}</p>
-                </div>
-                <div class="mb-3 col-md-12">
                     <label for="email" class="form-label">Email</label>
                     <p class="border p-2 rounded m-0">{{ $administrator->email }}</p>
                 </div>

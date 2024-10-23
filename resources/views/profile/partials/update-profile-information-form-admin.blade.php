@@ -43,21 +43,6 @@
                         </div>
                     @endif
                 </div>
-                <div class="mb-3">
-                    <label for="foto" class="form-label">Foto</label>
-                    @if ($user->photo)
-                        <img src="/{{ $user->photoFile }}" alt="{{ $user->name }}"
-                            class="img-preview img-thumbnail rounded mb-2" style="width: 300px; height: auto;">
-                    @else
-                        <img class="img-preview img-thumbnail rounded" style="width: 300px; height: auto;">
-                    @endif
-                    <input class="form-control" type="file" id="foto" name="foto"
-                        accept=".png, .jpg, .jpeg" />
-                    <x-input-error class="mt-2" :messages="$errors->get('foto')" />
-                    <div id="form-help" class="form-text">
-                        <small>PNG, JPG atau JPEG (Max. 2 MB).</small>
-                    </div>
-                </div>
             </div>
             <div class="mt-2">
                 <button type="submit" class="btn btn-primary me-2">Simpan Data</button>
