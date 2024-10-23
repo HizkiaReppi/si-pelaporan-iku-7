@@ -25,7 +25,7 @@ Route::get('/', function () {
     } else {
         abort(403);
     }
-});
+})->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -62,7 +62,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/update-period/{id}', function (Request $request, $id) {
         PeriodHelper::setCurrentPeriod($id);
         return response()->json(['message' => 'Period updated successfully']);
-    });
+    })->name('update-period');
 
     // Comming Soon
     Route::get('/kelas-mata-kuliah', [CourseClassController::class, 'index'])->name('dashboard.kelas-mata-kuliah.index');

@@ -5,7 +5,7 @@
             <div class="card-body">
                 <!-- Logo -->
                 <div class="app-brand justify-content-center fs-2 mb-3">
-                    <a href="/" class="app-brand-link">
+                    <a href="{{ route('home') }}" class="app-brand-link">
                         SI PELAPORAN IKU 7
                     </a>
                 </div>

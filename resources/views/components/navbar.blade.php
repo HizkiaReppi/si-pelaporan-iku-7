@@ -116,7 +116,10 @@
 
         let selectedPeriodId = this.value;
 
-        fetch(`/update-period/${selectedPeriodId}`, {
+        let routeLink = `{{ route('update-period', ":id") }}`;
+        routeLink = routeLink.replace(':id', selectedPeriodId);
+
+        fetch(routeLink, {
             method: 'POST',
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}',

@@ -3,7 +3,7 @@
         <div class="card">
             <div class="card-body">
                 <div class="app-brand justify-content-center fs-2 mb-5">
-                    <a href="/" class="app-brand-link">
+                    <a href="{{ route('home') }}" class="app-brand-link">
                         SI PELAPORAN IKU 7
                     </a>
                 </div>
