@@ -1,6 +1,18 @@
+@php
+    $baseUrl = config('app.url');
+
+    $baseUrl = explode('://', $baseUrl)[1];
+
+    if (request()->secure()) {
+        $baseUrl = 'https://' . $baseUrl;
+    } else {
+        $baseUrl = 'http://' . $baseUrl;
+    }
+@endphp
+
 <x-error-layout title="Coming Soon">
     <div class="mb-0">
-        <img src="/assets/images/maintenance.svg" alt="Maintenance" width="500" class="img-fluid" />
+        <img src="{{$baseUrl}}/assets/images/maintenance.svg" alt="Maintenance" width="500" class="img-fluid" />
     </div>
     <h1 class="mb-2 mx-2">Coming Soon :(</h1>
     <h5 class="mb-4 mx-2">Fitur sedang dalam pengembangan.</h5>
