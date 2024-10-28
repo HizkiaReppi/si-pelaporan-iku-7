@@ -6,11 +6,22 @@
     } elseif (auth()->user()->role == 'admin-prodi') {
         $homeLink = route('dashboard.pelaporan-prodi.index');
     }
+
+    $baseUrl = config('app.url');
+
+    $baseUrl = explode('://', $baseUrl)[1];
+
+    if (request()->secure()) {
+        $baseUrl = 'https://' . $baseUrl;
+    } else {
+        $baseUrl = 'http://' . $baseUrl;
+    }
 @endphp
 
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
     <div class="app-brand demo">
-        <a href="{{ $homeLink }}" class="app-brand-link">
+        <a href="{{ $homeLink }}" class="app-brand-link" style="margin-left:-10px">
+            <img src="{{$baseUrl}}/assets/images/logo-unima.png" class="img-fluid" style="width: 50px" />
             <span class="app-brand-text demo menu-text fw-bold ms-2 text-uppercase">IKU7 UNIMA</span>
         </a>
 
@@ -117,80 +128,3 @@
         </ul>
     @endcanany
 </aside>
-
-@can('admin-prodi')
-    <!-- Modal Deskripsi -->
-    <div class="modal fade" id="modal-deskripsi" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="1"
-        aria-labelledby="modalEditDataLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="modalEditDataLabel">Input Deskripsi Mata Kuliah</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <form id="input-deskripsi" method="post"
-                            action="{{ route('dashboard.pelaporan-prodi.input-deskripsi', '') }}">
-                            @csrf
-                            <label class="form-label" for="course_id">Mata Kuliah <span
-                                    style="font-size:14px;color:red">*</span></label>
-                            <x-select :options="$courses" key="name" placeholders="Pilih Mata Kuliah"
-                                id="course_deskripsi" name="course_id" required />
-                        </form>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-primary" form="input-deskripsi">Pilih Mata Kuliah Ini</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Modal Bobot -->
-    <div class="modal fade" id="modal-bobot" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="modalEditDataLabel">Input Bobot Mata Kuliah</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <form id="input-bobot" method="post"
-                            action="{{ route('dashboard.pelaporan-prodi.input-bobot', '') }}">
-                            @csrf
-                            <label class="form-label" for="course_id">Mata Kuliah <span
-                                    style="font-size:14px;color:red">*</span></label>
-                            <x-select :options="$courses" key="name" placeholders="Pilih Mata Kuliah" id="course_bobot"
-                                name="course_id" required />
-                        </form>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-primary" form="input-bobot">Pilih Mata Kuliah Ini</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        $(document).ready(function() {
-            $('#course_deskripsi').on('change', function() {
-                let courseId = $(this).val()
-                let formAction = "{{ route('dashboard.pelaporan-prodi.input-deskripsi', ':id') }}";
-                formAction = formAction.replace(':id', courseId);
-                console.log(formAction);
-                $('#input-deskripsi').attr('action', formAction);
-            });
-
-            $('#course_bobot').on('change', function() {
-                let courseId = $(this).val();
-                let formAction = "{{ route('dashboard.pelaporan-prodi.input-bobot', ':id') }}";
-                formAction = formAction.replace(':id', courseId);
-                $('#input-bobot').attr('action', formAction);
-            });
-        });
-    </script>
-@endcan
