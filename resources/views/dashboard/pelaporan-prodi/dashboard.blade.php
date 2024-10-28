@@ -17,7 +17,7 @@
     </div>
 
     <script>
-        var verificationStatusOptions = {
+        const verificationStatusOptions = {
             chart: {
                 type: 'pie'
             },
@@ -40,11 +40,11 @@
             }]
         };
 
-        var verificationStatusChart = new ApexCharts(document.querySelector("#chart-verification-status"),
+        const verificationStatusChart = new ApexCharts(document.querySelector("#chart-verification-status"),
             verificationStatusOptions);
         verificationStatusChart.render();
 
-        var averageScoresOptions = {
+        const averageScoresOptions = {
             chart: {
                 type: 'bar'
             },
@@ -65,7 +65,7 @@
             }
         };
 
-        var averageScoresChart = new ApexCharts(document.querySelector("#chart-average-scores"), averageScoresOptions);
+        const averageScoresChart = new ApexCharts(document.querySelector("#chart-average-scores"), averageScoresOptions);
         averageScoresChart.render();
     </script>
 </x-dashboard-layout>
