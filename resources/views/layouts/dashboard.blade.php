@@ -27,6 +27,7 @@
     <script src="{{ $baseUrl }}/assets/vendor/js/helpers.js"></script>
     <script src="{{ $baseUrl }}/assets/js/config.js"></script>
     <script src="{{ $baseUrl }}/assets/vendor/libs/jquery/jquery.js"></script>
+    <script src="{{ $baseUrl }}/assets/vendor/libs/apex-charts/apexcharts.js"></script>
     <script src="https://kit.fontawesome.com/29057e6c17.js" crossorigin="anonymous"></script>
 </head>
 
@@ -147,7 +148,6 @@
     <script src="{{ $baseUrl }}/assets/vendor/js/bootstrap.js"></script>
     <script src="{{ $baseUrl }}/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
     <script src="{{ $baseUrl }}/assets/vendor/js/menu.js"></script>
-    <script src="{{ $baseUrl }}/assets/vendor/libs/apex-charts/apexcharts.js"></script>
     <script src="{{ $baseUrl }}/assets/js/main.js"></script>
     <script src="{{ $baseUrl }}/assets/js/bootstrap.js"></script>
     <script src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>

@@ -5,6 +5,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CourseClassController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DashboardProdiController;
 use App\Http\Controllers\DepartmentAdminController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\FacultyController;
@@ -29,6 +30,7 @@ Route::get('/', function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard/program-studi', [DashboardProdiController::class, 'index'])->name('dashboard-program-studi.index');
 
     Route::get('/administrator', [AdminController::class, 'index'])->middleware('password.confirm')->name('dashboard.administrator.index');
     Route::resource('/administrator', AdminController::class)->names('dashboard.administrator')->except('index');

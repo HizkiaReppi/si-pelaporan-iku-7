@@ -22,6 +22,12 @@
     <div class="menu-inner-shadow"></div>
     <ul class="menu-inner py-1">
         @canany(['admin-prodi'])
+        <li class="menu-item {{ request()->routeIs('dashboard-program-studi*') ? 'active' : '' }}">
+                <a href="{{ route('dashboard-program-studi.index') }}" class="menu-link">
+                    <i class="menu-icon tf-icons fa-solid fa-chart-line"></i>
+                    <div data-i18n="Dashboard">Dashboard</div>
+                </a>
+            </li>
             <li class="menu-item {{ request()->routeIs('dashboard.pelaporan-prodi.*') ? 'active open' : '' }}">
                 <a href="javascript:void(0);" class="menu-link menu-toggle">
                     <i class="menu-icon tf-icons fa-solid fa-clipboard-list"></i>
