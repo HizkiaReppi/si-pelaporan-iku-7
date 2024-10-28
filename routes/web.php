@@ -30,6 +30,7 @@ Route::get('/', function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::post('/dashboard/submissions-by-department', [DashboardController::class, 'getSubmissionsByDepartment'])->name('dashboard.getSubmissionsByDepartment');
     Route::get('/dashboard/program-studi', [DashboardProdiController::class, 'index'])->name('dashboard-program-studi.index');
 
     Route::get('/administrator', [AdminController::class, 'index'])->middleware('password.confirm')->name('dashboard.administrator.index');

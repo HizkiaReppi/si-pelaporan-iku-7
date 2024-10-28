@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Course;
+use App\Models\Faculty;
 use App\Models\IKU7;
+use App\Models\Period;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Gate;
 
@@ -14,7 +17,7 @@ class DashboardController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): View|RedirectResponse
+    public function index(Request $request): View|RedirectResponse
     {
         if (!Gate::allows('admin') && !Gate::allows('super-admin')) {
             abort(403);
@@ -24,7 +27,42 @@ class DashboardController extends Controller
         $totalCourses = Course::count();
         $totalCoursesReported = $this->getTotalCoursesReported();
         $totalCoursesNotReported = $this->getTotalCoursesNotReported();
-        return view('dashboard.index', compact('totalCourses', 'totalDepartmentsWithAccounts', 'totalCoursesReported', 'totalCoursesNotReported'));
+
+        $submissionFacultiesData = IKU7::with('user.prodi.fakultas')
+            ->get()
+            ->groupBy('user.prodi.fakultas.name')
+            ->map(function ($items) {
+                return $items->count();
+            });
+
+        $verificationStatus = IKU7::select('status_verifikasi')->selectRaw('COUNT(*) as total')->groupBy('status_verifikasi')->get();
+
+        $scoreTrends = Period::with([
+            'pelaporanIku' => function ($query) {
+                $query->selectRaw('period_id, AVG(score_case_method + score_project_based + score_cognitive_task + score_cognitive_quiz + score_cognitive_uts + score_cognitive_uas) as avg_score')->groupBy('period_id');
+            },
+        ])->get();
+
+        $faculties = Faculty::all();
+
+        return view('dashboard.index', compact('totalCourses', 'totalDepartmentsWithAccounts', 'totalCoursesReported', 'totalCoursesNotReported', 'submissionFacultiesData', 'verificationStatus', 'scoreTrends', 'faculties'));
+    }
+
+    public function getSubmissionsByDepartment(Request $request)
+    {
+        $facultyId = $request->input('faculty_id', Faculty::where('name', 'Teknik')->first()->id);
+
+        $submissionData = IKU7::whereHas('user.prodi', function ($query) use ($facultyId) {
+            $query->where('faculty_id', $facultyId);
+        })
+            ->with('user.prodi')
+            ->get()
+            ->groupBy('user.prodi.name')
+            ->map(function ($items) {
+                return $items->count();
+            });
+
+        return response()->json($submissionData);
     }
 
     private function getTotalCoursesReported()
