@@ -28,7 +28,9 @@ class DashboardController extends Controller
         $totalCoursesReported = $this->getTotalCoursesReported();
         $totalCoursesNotReported = $this->getTotalCoursesNotReported();
 
-        $submissionFacultiesData = IKU7::with('user.prodi.fakultas')
+        $submissionFacultiesData = IKU7::whereNot('status_verifikasi', 'draft')
+            ->withCount('user')
+            ->with('user.prodi.fakultas')
             ->get()
             ->groupBy('user.prodi.fakultas.name')
             ->map(function ($items) {
@@ -55,6 +57,8 @@ class DashboardController extends Controller
         $submissionData = IKU7::whereHas('user.prodi', function ($query) use ($facultyId) {
             $query->where('faculty_id', $facultyId);
         })
+            ->whereNot('status_verifikasi', 'draft')
+            ->withCount('user')
             ->with('user.prodi')
             ->get()
             ->groupBy('user.prodi.name')
