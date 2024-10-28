@@ -34,7 +34,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('/administrator', AdminController::class)->names('dashboard.administrator')->except('index');
     
     Route::resource('/mata-kuliah', CourseController::class)->names('dashboard.mata-kuliah')->except('create', 'edit');
-    Route::resource('/pelaporan', PelaporanProdiController::class)->names('dashboard.pelaporan-prodi')->except('create', 'edit', 'destroy');
+    Route::resource('/pelaporan', PelaporanProdiController::class)->names('dashboard.pelaporan-prodi')->except('create', 'destroy');
     Route::get('/pelaporan/{pelaporan}/edit-bobot', [PelaporanProdiController::class, 'editBobot'])->name('dashboard.pelaporan-prodi.edit-bobot');
     Route::put('/pelaporan/{pelaporan}/update-bobot', [PelaporanProdiController::class, 'updateBobot'])->name('dashboard.pelaporan-prodi.update-bobot');
     Route::get('/pelaporan/{pelaporan}/edit-deskripsi', [PelaporanProdiController::class, 'editDeskripsi'])->name('dashboard.pelaporan-prodi.edit-deskripsi');

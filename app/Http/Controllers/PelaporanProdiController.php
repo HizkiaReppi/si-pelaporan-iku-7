@@ -70,9 +70,9 @@ class PelaporanProdiController extends Controller
                 <i class="bx bxs-user-detail me-1"></i> Detail
             </a>
             <a href="' .
-                            route('dashboard.pelaporan-prodi.edit-bobot', $row->pelaporanIku->id) .
+                            route('dashboard.pelaporan-prodi.edit', $row->pelaporanIku->id) .
                             '" class="dropdown-item btn-edit">
-                <i class="bx bx-edit-alt me-1"></i> Edit Bobot
+                <i class="bx bx-edit-alt me-1"></i> Edit
                 </a>';
                         if (IKUHelper::scoresAreFilled($row->pelaporanIku)) {
                             $btn .=
@@ -114,7 +114,7 @@ class PelaporanProdiController extends Controller
         return view('dashboard.pelaporan-prodi.create', compact('periods'));
     }
 
-    public function editBobot(IKU7 $pelaporan)
+    public function edit(IKU7 $pelaporan)
     {
         if ($pelaporan->status_verifikasi !== 'draft') {
             return redirect()->back()
@@ -122,27 +122,10 @@ class PelaporanProdiController extends Controller
         }
 
         $pelaporan->load('mataKuliah');
-        return view('dashboard.pelaporan-prodi.edit-bobot', compact('pelaporan'));
+        return view('dashboard.pelaporan-prodi.edit', compact('pelaporan'));
     }
 
-    public function editDeskripsi(IKU7 $pelaporan, IKUHelper $iKUHelper)
-    {
-        if ($pelaporan->status_verifikasi !== 'draft') {
-            return redirect()->back()
-                ->with('toast_error', 'Data sedang diverifikasi. Silakan menunggu terlebih dahulu.');
-        }
-
-        if ($pelaporan->status_verifikasi !== 'draft') {
-            return redirect()
-                ->route('dashboard.pelaporan-prodi.edit-bobot', $pelaporan->id)
-                ->with('toast_error', 'Data Bobot belum lengkap. Silakan lengkapi terlebih dahulu.');
-        }
-
-        $pelaporan->load('mataKuliah');
-        return view('dashboard.pelaporan-prodi.edit-deskripsi', compact('pelaporan'));
-    }
-
-    public function updateBobot(Request $request, IKU7 $pelaporan)
+    public function update(Request $request, IKU7 $pelaporan)
     {
         $validatedData = Validator::make($request->all(), [
             'bobot_case_method' => ['required', 'numeric', 'min:0', 'max:100'],
@@ -151,6 +134,13 @@ class PelaporanProdiController extends Controller
             'bobot_kognitif_kuis' => ['required', 'numeric', 'min:0', 'max:100'],
             'bobot_kognitif_uts' => ['required', 'numeric', 'min:0', 'max:100'],
             'bobot_kognitif_uas' => ['required', 'numeric', 'min:0', 'max:100'],
+            'deskripsi_penilaian_case_method' => ['nullable', 'string'],
+            'deskripsi_penilaian_project_based' => ['nullable', 'string'],
+            'deskripsi_penilaian_kognitif_tugas' => ['nullable', 'string'],
+            'deskripsi_penilaian_kognitif_kuis' => ['nullable', 'string'],
+            'deskripsi_penilaian_kognitif_uts' => ['nullable', 'string'],
+            'deskripsi_penilaian_kognitif_uas' => ['nullable', 'string'],
+            'file_rps' => ['required', 'file', 'mimes:pdf', 'max:2048'],
         ])->after(function ($validator) use ($request) {
             $totalBobot = $request->bobot_case_method + $request->bobot_project_based + $request->bobot_kognitif_tugas + $request->bobot_kognitif_kuis + $request->bobot_kognitif_uts + $request->bobot_kognitif_uas;
 
@@ -180,59 +170,29 @@ class PelaporanProdiController extends Controller
             $pelaporan->score_cognitive_uts = $data['bobot_kognitif_uts'];
             $pelaporan->score_cognitive_uas = $data['bobot_kognitif_uas'];
 
-            $pelaporan->save();
 
-            DB::commit();
-            return redirect()->route('dashboard.pelaporan-prodi.index')->with('toast_success', 'Data Bobot Mata Kuliah berhasil disimpan.');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return redirect()->back()->withInput()->with('toast_error', 'Terjadi kesalahan. Silakan coba lagi.');
-        }
-    }
-
-    public function updateDeskripsi(Request $request, IKU7 $pelaporan, IKUHelper $iKUHelper)
-    {
-        if (!$iKUHelper::scoresAreFilled($pelaporan)) {
-            return redirect()
-                ->route('dashboard.pelaporan-prodi.edit-bobot', $pelaporan->id)
-                ->with('toast_error', 'Data Bobot belum lengkap. Silakan lengkapi terlebih dahulu.');
-        }
-
-        $validatedData = $request->validate([
-            'deskripsi_penilaian_case_method' => ['nullable', 'string'],
-            'deskripsi_penilaian_project_based' => ['nullable', 'string'],
-            'deskripsi_penilaian_kognitif_tugas' => ['nullable', 'string'],
-            'deskripsi_penilaian_kognitif_kuis' => ['nullable', 'string'],
-            'deskripsi_penilaian_kognitif_uts' => ['nullable', 'string'],
-            'deskripsi_penilaian_kognitif_uas' => ['nullable', 'string'],
-            'file_rps' => ['required', 'file', 'mimes:pdf', 'max:2048'],
-        ]);
-
-        DB::beginTransaction();
-
-        try {
-            if(isset($validatedData['deskripsi_penilaian_case_method'])) {
-                $pelaporan->description_case_method = $validatedData['deskripsi_penilaian_case_method'];
+            if(isset($data['deskripsi_penilaian_case_method'])) {
+                $pelaporan->description_case_method = $data['deskripsi_penilaian_case_method'];
             }
 
-            if(isset($validatedData['deskripsi_penilaian_project_based'])) {
-                $pelaporan->description_project_based = $validatedData['deskripsi_penilaian_project_based'];
+            if(isset($data['deskripsi_penilaian_project_based'])) {
+                $pelaporan->description_project_based = $data['deskripsi_penilaian_project_based'];
             }
 
-            if(isset($validatedData['deskripsi_penilaian_kognitif_tugas'])) {
-                $pelaporan->description_cognitive_task = $validatedData['deskripsi_penilaian_kognitif_tugas'];
+            if(isset($data['deskripsi_penilaian_kognitif_tugas'])) {
+                $pelaporan->description_cognitive_task = $data['deskripsi_penilaian_kognitif_tugas'];
             }
 
-            if(isset($validatedData['deskripsi_penilaian_kognitif_kuis'])) {
-                $pelaporan->description_cognitive_quiz = $validatedData['deskripsi_penilaian_kognitif_kuis'];
+            if(isset($data['deskripsi_penilaian_kognitif_kuis'])) {
+                $pelaporan->description_cognitive_quiz = $data['deskripsi_penilaian_kognitif_kuis'];
             }
 
-            if(isset($validatedData['deskripsi_penilaian_kognitif_uts'])) {
-                $pelaporan->description_cognitive_uts = $validatedData['deskripsi_penilaian_kognitif_uts'];
+            if(isset($data['deskripsi_penilaian_kognitif_uts'])) {
+                $pelaporan->description_cognitive_uts = $data['deskripsi_penilaian_kognitif_uts'];
             }
 
-            if(isset($validatedData['deskripsi_penilaian_kognitif_uas'])) {
-                $pelaporan->description_cognitive_uas = $validatedData['deskripsi_penilaian_kognitif_uas'];
+            if(isset($data['deskripsi_penilaian_kognitif_uas'])) {
+                $pelaporan->description_cognitive_uas = $data['deskripsi_penilaian_kognitif_uas'];
             }
 
             if ($pelaporan->file_rps) {
@@ -254,7 +214,7 @@ class PelaporanProdiController extends Controller
             $pelaporan->save();
 
             DB::commit();
-            return redirect()->route('dashboard.pelaporan-prodi.index')->with('toast_success', 'Data Deskripsi Mata Kuliah berhasil disimpan.');
+            return redirect()->route('dashboard.pelaporan-prodi.index')->with('toast_success', 'Data Bobot dan Deskripsi Kuliah berhasil disimpan.');
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->withInput()->with('toast_error', 'Terjadi kesalahan. Silakan coba lagi.');

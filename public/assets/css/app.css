@@ -6,24 +6,48 @@
     width: 100vw;
 }
 
+div input .custom-input {
+    height: 90px !important;
+}
+
+trix-editor {
+    min-height: 30px !important;
+}
+
+trix-toolbar .trix-button {
+    font-size: 14px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
 trix-toolbar [data-trix-button-group="file-tools"] {
     display: none !important;
 }
 
-#monthly-submissions, #status-counts, #category-counts {
+trix-toolbar .trix-button-group--block-tools [data-trix-attribute="code"],
+trix-toolbar .trix-button-group--block-tools [data-trix-attribute="quote"] {
+    display: none !important;
+}
+
+#monthly-submissions,
+#status-counts,
+#category-counts {
     width: 100%;
     min-height: 300px;
     max-height: 100%;
 }
 
 @media (max-width: 768px) {
-    #monthly-submissions, #status-counts, #category-counts {
+    #monthly-submissions,
+    #status-counts,
+    #category-counts {
         min-height: 250px;
     }
 }
 
 @media (min-width: 768px) {
-    .notif-dropdown, .verify-email-card {
+    .notif-dropdown,
+    .verify-email-card {
         width: 80vw;
     }
     .verify-email-card {
