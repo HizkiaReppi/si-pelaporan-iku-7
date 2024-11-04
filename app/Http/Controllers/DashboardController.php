@@ -69,6 +69,57 @@ class DashboardController extends Controller
         return response()->json($submissionData);
     }
 
+    public function getIKUDataByFaculty()
+    {
+        $ikuData = IKU7::with(['mataKuliah.prodi.fakultas'])
+            ->get()
+            ->groupBy(function ($iku) {
+                return $iku->mataKuliah->prodi->fakultas->name;
+            })
+            ->map(function ($items) {
+                return [
+                    'total_rps' => $items->whereNotNull('file_rps')->count(),
+                    'total_bobot' => $items->whereNotNull('score_case_method')->count() +
+                                     $items->whereNotNull('score_project_based')->count() +
+                                     $items->whereNotNull('score_cognitive_task')->count() +
+                                     $items->whereNotNull('score_cognitive_quiz')->count() +
+                                     $items->whereNotNull('score_cognitive_uts')->count() +
+                                     $items->whereNotNull('score_cognitive_uas')->count(),
+                    'total_mata_kuliah' => $items->count(),
+                ];
+            });
+
+        return response()->json($ikuData);
+    }
+
+    public function getIKUDataByDepartment(Request $request)
+    {
+        $facultyId = $request->input('faculty_id', Faculty::first()->id);
+
+        $ikuData = IKU7::whereHas('user.prodi', function ($query) use ($facultyId) {
+            $query->where('faculty_id', $facultyId);
+        })
+        ->with('user.prodi')
+        ->get()
+        ->groupBy(function ($iku) {
+            return $iku->user->prodi->name;
+        })
+        ->map(function ($items) {
+            return [
+                'total_rps' => $items->whereNotNull('file_rps')->count(),
+                'total_bobot' => $items->whereNotNull('score_case_method')->count() +
+                                 $items->whereNotNull('score_project_based')->count() +
+                                 $items->whereNotNull('score_cognitive_task')->count() +
+                                 $items->whereNotNull('score_cognitive_quiz')->count() +
+                                 $items->whereNotNull('score_cognitive_uts')->count() +
+                                 $items->whereNotNull('score_cognitive_uas')->count(),
+                'total_mata_kuliah' => $items->count(),
+            ];
+        });
+
+        return response()->json($ikuData);
+    }
+
     private function getTotalCoursesReported()
     {
         return IKU7::whereNotNull('score_case_method')->whereNotNull('score_project_based')->whereNotNull('score_cognitive_task')->whereNotNull('score_cognitive_quiz')->whereNotNull('score_cognitive_uts')->whereNotNull('score_cognitive_uas')->whereNotNull('description_case_method')->whereNotNull('description_project_based')->whereNotNull('description_cognitive_task')->whereNotNull('description_cognitive_quiz')->whereNotNull('description_cognitive_uts')->whereNotNull('description_cognitive_uas')->whereNotNull('file_rps')->count();

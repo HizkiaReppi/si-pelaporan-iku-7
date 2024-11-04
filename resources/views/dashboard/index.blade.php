@@ -102,11 +102,44 @@
 
     <div class="card px-4 pt-4 pb-3 mb-4">
         <div class="row">
+            <div>
+                <h5>Rekap Pelaporan IKU 7 per Fakultas</h5>
+                <div id="facultyIKUChart"></div>
+            </div>
+        </div>
+        <hr class="mt-4">
+        <div class="row mt-4">
+            <h5>Rekap Pengajuan IKU 7 per Program Studi</h5>
+
+            <div class="mb-3">
+                <label for="facultyIkuFilter" class="form-label">Pilih Fakultas</label>
+                <select id="facultyIkuFilter" class="form-select">
+                    @foreach ($faculties as $faculty)
+                        <option value="{{ $faculty->id }}">
+                            {{ $faculty->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div id="departmentIKUChart"></div>
+        </div>
+    </div>
+
+    <div class="card px-4 pt-4 pb-3 mb-4">
+        <div class="row">
             <div class="col-md-6">
                 <h5>Total Pengajuan Per Fakultas</h5>
                 <div id="facultySubmissionChart"></div>
             </div>
             <div class="col-md-6">
+                <h5>Tren Performa per Periode</5>
+                <div id="chart-score-trends" class="mt-4"></div>
+            </div>
+        </div>
+        <hr class="mt-4">
+        <div class="row mt-4">
+            <div>
                 <h5>Total Pengajuan per Program Studi</h5>
 
                 <div class="mb-3">
@@ -121,17 +154,6 @@
                 </div>
 
                 <div id="departmentSubmissionChart"></div>
-            </div>
-        </div>
-        <hr class="mt-4">
-        <div class="row mt-4">
-            <div class="col-md-6">
-                <h5>Distribusi Status Verifikasi</h5>
-                <div id="chart-verification-status"></div>
-            </div>
-            <div class="col-md-6">
-                <h5>Tren Performa per Periode</5>
-                    <div id="chart-score-trends" class="mt-4"></div>
             </div>
         </div>
     </div>
@@ -164,22 +186,6 @@
             const submissionFacultiesChart = new ApexCharts(document.querySelector("#facultySubmissionChart"),
                 submissionOptions);
             submissionFacultiesChart.render();
-
-            const verificationStatusOptions = {
-                chart: {
-                    type: 'pie'
-                },
-                series: [
-                    {{ $verificationStatus->where('status_verifikasi', 'approved')->sum('total') }},
-                    {{ $verificationStatus->where('status_verifikasi', 'pending')->sum('total') }},
-                    {{ $verificationStatus->where('status_verifikasi', 'draft')->sum('total') }},
-                ],
-                labels: ['Disetujui', 'Menunggu Persetujuan', 'Draft'],
-            };
-
-            const verificationStatusChart = new ApexCharts(document.querySelector("#chart-verification-status"),
-                verificationStatusOptions);
-            verificationStatusChart.render();
 
             const scoreTrendsOptions = {
                 chart: {
@@ -229,7 +235,7 @@
             departmentSubmissionChart.render();
 
             const loadChartData = (facultyId) => {
-                fetch(`/dashboard/submissions-by-department`, {
+                fetch(`{{ route('dashboard.getSubmissionsByDepartment') }}`, {
                         method: 'POST',
                         headers: {
                             'X-CSRF-TOKEN': '{{ csrf_token() }}',
@@ -257,6 +263,147 @@
 
             document.getElementById('facultyFilter').addEventListener('change', (event) => {
                 loadChartData(event.target.value);
+            });
+
+            fetch(`{{ route('dashboard.getIKUDataByFaculty') }}`)
+                .then(response => response.json())
+                .then(data => {
+                    const facultyNames = Object.keys(data);
+                    const rpsData = facultyNames.map(faculty => data[faculty].total_rps);
+                    const bobotData = facultyNames.map(faculty => data[faculty].total_bobot);
+                    const mataKuliahData = facultyNames.map(faculty => data[faculty].total_mata_kuliah);
+
+                    const options = {
+                        chart: {
+                            type: 'bar',
+                            height: 400,
+                            stacked: true,
+                        },
+                        series: [{
+                                name: 'RPS',
+                                data: rpsData
+                            },
+                            {
+                                name: 'Bobot',
+                                data: bobotData
+                            },
+                            {
+                                name: 'Jumlah Mata Kuliah',
+                                data: mataKuliahData
+                            },
+                        ],
+                        xaxis: {
+                            categories: facultyNames,
+                        },
+                        title: {
+                            text: 'Rekap Pengajuan IKU 7 per Fakultas',
+                            align: 'center',
+                        },
+                        dataLabels: {
+                            enabled: true,
+                            formatter: (val) => `${val}`,
+                        },
+                        colors: ['#008FFB', '#00E396', '#FEB019'],
+                        plotOptions: {
+                            bar: {
+                                horizontal: false,
+                                columnWidth: '55%',
+                            },
+                        },
+                    };
+
+                    const chart = new ApexCharts(document.querySelector("#facultyIKUChart"), options);
+                    chart.render();
+                })
+                .catch(error => console.error('Error fetching IKU data:', error));
+
+            const ikuDepartmentChartOptions = {
+                chart: {
+                    type: 'bar',
+                    height: 400,
+                    stacked: true,
+                },
+                series: [{
+                        name: 'RPS',
+                        data: []
+                    },
+                    {
+                        name: 'Bobot',
+                        data: []
+                    },
+                    {
+                        name: 'Jumlah Mata Kuliah',
+                        data: []
+                    },
+                ],
+                xaxis: {
+                    categories: [],
+                },
+                title: {
+                    text: 'Rekap Pengajuan IKU 7 per Program Studi',
+                    align: 'center',
+                },
+                dataLabels: {
+                    enabled: true,
+                    formatter: (val) => `${val}`,
+                },
+                colors: ['#008FFB', '#00E396', '#FEB019'],
+                plotOptions: {
+                    bar: {
+                        horizontal: false,
+                        columnWidth: '55%',
+                    },
+                },
+            };
+
+            const chart = new ApexCharts(document.querySelector("#departmentIKUChart"), ikuDepartmentChartOptions);
+            chart.render();
+
+            const loadIkuDepartmentChartData = (facultyId) => {
+                fetch(`{{ route('dashboard.getIKUDataByDepartment') }}`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            faculty_id: facultyId
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        const departmentNames = Object.keys(data);
+                        const rpsData = departmentNames.map(department => data[department].total_rps);
+                        const bobotData = departmentNames.map(department => data[department].total_bobot);
+                        const mataKuliahData = departmentNames.map(department => data[department]
+                            .total_mata_kuliah);
+
+                        chart.updateOptions({
+                            series: [{
+                                    name: 'RPS',
+                                    data: rpsData
+                                },
+                                {
+                                    name: 'Bobot',
+                                    data: bobotData
+                                },
+                                {
+                                    name: 'Jumlah Mata Kuliah',
+                                    data: mataKuliahData
+                                },
+                            ],
+                            xaxis: {
+                                categories: departmentNames,
+                            },
+                        });
+                    })
+                    .catch(error => console.error('Error loading data:', error));
+            };
+
+            loadIkuDepartmentChartData(document.getElementById('facultyIkuFilter').value);
+
+            document.getElementById('facultyIkuFilter').addEventListener('change', (event) => {
+                loadIkuDepartmentChartData(event.target.value);
             });
         })
     </script>
