@@ -134,7 +134,7 @@
             </div>
             <div class="col-md-6">
                 <h5>Tren Performa per Periode</5>
-                <div id="chart-score-trends" class="mt-4"></div>
+                    <div id="chart-score-trends" class="mt-4"></div>
             </div>
         </div>
         <hr class="mt-4">
@@ -277,7 +277,6 @@
                         chart: {
                             type: 'bar',
                             height: 400,
-                            stacked: true,
                         },
                         series: [{
                                 name: 'RPS',
@@ -306,8 +305,8 @@
                         colors: ['#008FFB', '#00E396', '#FEB019'],
                         plotOptions: {
                             bar: {
-                                horizontal: false,
-                                columnWidth: '55%',
+                                columnWidth: '45%',
+                                distributed: false,
                             },
                         },
                     };
@@ -321,7 +320,6 @@
                 chart: {
                     type: 'bar',
                     height: 400,
-                    stacked: true,
                 },
                 series: [{
                         name: 'RPS',
@@ -350,8 +348,8 @@
                 colors: ['#008FFB', '#00E396', '#FEB019'],
                 plotOptions: {
                     bar: {
-                        horizontal: false,
-                        columnWidth: '55%',
+                        columnWidth: '45%',
+                        distributed: false,
                     },
                 },
             };
