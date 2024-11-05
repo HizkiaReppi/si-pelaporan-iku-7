@@ -37,8 +37,9 @@ class DashboardController extends Controller
                 return $items->count();
             });
 
+            
         $verificationStatus = IKU7::select('status_verifikasi')->selectRaw('COUNT(*) as total')->groupBy('status_verifikasi')->get();
-
+            
         $scoreTrends = Period::with([
             'pelaporanIku' => function ($query) {
                 $query->selectRaw('period_id, AVG(score_case_method + score_project_based + score_cognitive_task + score_cognitive_quiz + score_cognitive_uts + score_cognitive_uas) as avg_score')->groupBy('period_id');
@@ -71,20 +72,17 @@ class DashboardController extends Controller
 
     public function getIKUDataByFaculty()
     {
-        $ikuData = IKU7::with(['mataKuliah.prodi.fakultas'])
+        $ikuData = IKU7::with('mataKuliah.prodi.fakultas')
             ->get()
             ->groupBy(function ($iku) {
                 return $iku->mataKuliah->prodi->fakultas->name;
             })
             ->map(function ($items) {
                 return [
-                    'total_rps' => $items->whereNotNull('file_rps')->count(),
-                    'total_bobot' => $items->whereNotNull('score_case_method')->count() +
-                                     $items->whereNotNull('score_project_based')->count() +
-                                     $items->whereNotNull('score_cognitive_task')->count() +
-                                     $items->whereNotNull('score_cognitive_quiz')->count() +
-                                     $items->whereNotNull('score_cognitive_uts')->count() +
-                                     $items->whereNotNull('score_cognitive_uas')->count(),
+                    'proses_verifikasi' => $items->where('status_verifikasi', 'pending')->count(),
+                    'terverifikasi' => $items->where('status_verifikasi', 'approved')->count(),
+                    'revisi' => $items->where('status_verifikasi', 'rejected')->count(),
+                    'draft' => $items->where('status_verifikasi', 'draft')->count(),
                     'total_mata_kuliah' => $items->count(),
                 ];
             });
@@ -96,26 +94,23 @@ class DashboardController extends Controller
     {
         $facultyId = $request->input('faculty_id', Faculty::first()->id);
 
-        $ikuData = IKU7::whereHas('user.prodi', function ($query) use ($facultyId) {
+        $ikuData = IKU7::whereHas('mataKuliah.prodi', function ($query) use ($facultyId) {
             $query->where('faculty_id', $facultyId);
         })
-        ->with('user.prodi')
-        ->get()
-        ->groupBy(function ($iku) {
-            return $iku->user->prodi->name;
-        })
-        ->map(function ($items) {
-            return [
-                'total_rps' => $items->whereNotNull('file_rps')->count(),
-                'total_bobot' => $items->whereNotNull('score_case_method')->count() +
-                                 $items->whereNotNull('score_project_based')->count() +
-                                 $items->whereNotNull('score_cognitive_task')->count() +
-                                 $items->whereNotNull('score_cognitive_quiz')->count() +
-                                 $items->whereNotNull('score_cognitive_uts')->count() +
-                                 $items->whereNotNull('score_cognitive_uas')->count(),
-                'total_mata_kuliah' => $items->count(),
-            ];
-        });
+            ->with('mataKuliah.prodi')
+            ->get()
+            ->groupBy(function ($iku) {
+                return $iku->mataKuliah->prodi->name;
+            })
+            ->map(function ($items) {
+                return [
+                    'proses_verifikasi' => $items->where('status_verifikasi', 'pending')->count(),
+                    'terverifikasi' => $items->where('status_verifikasi', 'approved')->count(),
+                    'revisi' => $items->where('status_verifikasi', 'rejected')->count(),
+                    'draft' => $items->where('status_verifikasi', 'draft')->count(),
+                    'total_mata_kuliah' => $items->count(),
+                ];
+            });
 
         return response()->json($ikuData);
     }
@@ -127,6 +122,6 @@ class DashboardController extends Controller
 
     private function getTotalCoursesNotReported()
     {
-        return IKU7::whereNull('score_case_method')->orWhereNull('score_project_based')->orWhereNull('score_cognitive_task')->orWhereNull('score_cognitive_quiz')->orWhereNull('score_cognitive_uts')->orWhereNull('score_cognitive_uas')->orWhereNull('description_case_method')->orWhereNull('description_project_based')->orWhereNull('description_cognitive_task')->orWhereNull('description_cognitive_quiz')->orWhereNull('description_cognitive_uts')->orWhereNull('description_cognitive_uas')->orWhereNull('file_rps')->count();
+        return IKU7::whereNull('score_case_method')->whereNull('score_project_based')->whereNull('score_cognitive_task')->whereNull('score_cognitive_quiz')->whereNull('score_cognitive_uts')->whereNull('score_cognitive_uas')->whereNull('description_case_method')->whereNull('description_project_based')->whereNull('description_cognitive_task')->whereNull('description_cognitive_quiz')->whereNull('description_cognitive_uts')->whereNull('description_cognitive_uas')->whereNull('file_rps')->count();
     }
 }

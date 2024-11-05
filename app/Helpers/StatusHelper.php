@@ -15,7 +15,7 @@ class StatusHelper
         $statuses = [
             'pending' => 'Menunggu Persetujuan',
             'done' => 'Disetujui',
-            'rejected' => 'Ditolak',
+            'rejected' => 'Revisi',
             'draft' => 'Draft'
         ];
 

@@ -125,7 +125,7 @@
                             <select class="form-select" id="status" name="status">
                                 <option selected>Pilih Status Verifikasi</option>
                                 <option value="approved">Setujui</option>
-                                <option value="draft">Perlu Perbaikan</option>
+                                <option value="rejected">Perlu Perbaikan</option>
                             </select>
                             <x-input-error class="mt-2" :messages="$errors->get('status')" />
                         </div>

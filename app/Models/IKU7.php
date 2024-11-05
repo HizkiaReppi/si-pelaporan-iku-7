@@ -18,6 +18,11 @@ class IKU7 extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function prodi(): BelongsTo
+    {
+        return $this->belongsTo(Department::class, 'department_id');
+    }
+
     public function periode(): BelongsTo
     {
         return $this->belongsTo(Period::class, 'period_id');
