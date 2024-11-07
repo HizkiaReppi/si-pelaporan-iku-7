@@ -50,6 +50,8 @@ class RegisteredUserController extends Controller
 
             $user->save();
 
+            $user->sendEmailVerificationNotification();
+
             DB::commit();
             return redirect()->back()->with('success', 'Pendaftaran berhasil. Silahkan menunggu admin memverifikasi akun anda.');
         } catch (\Exception $e) {
