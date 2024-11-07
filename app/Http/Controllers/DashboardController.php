@@ -29,14 +29,13 @@ class DashboardController extends Controller
         $totalCoursesNotReported = $this->getTotalCoursesNotReported();
 
         $submissionFacultiesData = IKU7::whereNot('status_verifikasi', 'draft')
-            ->withCount('user')
-            ->with('user.prodi.fakultas')
             ->get()
-            ->groupBy('user.prodi.fakultas.name')
+            ->groupBy(function ($iku) {
+                return $iku->mataKuliah->prodi->fakultas->name;
+            })
             ->map(function ($items) {
                 return $items->count();
             });
-
             
         $verificationStatus = IKU7::select('status_verifikasi')->selectRaw('COUNT(*) as total')->groupBy('status_verifikasi')->get();
             
@@ -55,14 +54,15 @@ class DashboardController extends Controller
     {
         $facultyId = $request->input('faculty_id', Faculty::where('name', 'Teknik')->first()->id);
 
-        $submissionData = IKU7::whereHas('user.prodi', function ($query) use ($facultyId) {
+        $submissionData = IKU7::whereHas('mataKuliah.prodi', function ($query) use ($facultyId) {
             $query->where('faculty_id', $facultyId);
         })
             ->whereNot('status_verifikasi', 'draft')
-            ->withCount('user')
-            ->with('user.prodi')
+            ->with('mataKuliah.prodi')
             ->get()
-            ->groupBy('user.prodi.name')
+            ->groupBy(function ($iku) {
+                return $iku->mataKuliah->prodi->name;
+            })
             ->map(function ($items) {
                 return $items->count();
             });
@@ -117,11 +117,11 @@ class DashboardController extends Controller
 
     private function getTotalCoursesReported()
     {
-        return IKU7::whereNotNull('score_case_method')->whereNotNull('score_project_based')->whereNotNull('score_cognitive_task')->whereNotNull('score_cognitive_quiz')->whereNotNull('score_cognitive_uts')->whereNotNull('score_cognitive_uas')->whereNotNull('description_case_method')->whereNotNull('description_project_based')->whereNotNull('description_cognitive_task')->whereNotNull('description_cognitive_quiz')->whereNotNull('description_cognitive_uts')->whereNotNull('description_cognitive_uas')->whereNotNull('file_rps')->count();
+        return IKU7::where('status_verifikasi', '!=', 'draft')->count();
     }
 
     private function getTotalCoursesNotReported()
     {
-        return IKU7::whereNull('score_case_method')->whereNull('score_project_based')->whereNull('score_cognitive_task')->whereNull('score_cognitive_quiz')->whereNull('score_cognitive_uts')->whereNull('score_cognitive_uas')->whereNull('description_case_method')->whereNull('description_project_based')->whereNull('description_cognitive_task')->whereNull('description_cognitive_quiz')->whereNull('description_cognitive_uts')->whereNull('description_cognitive_uas')->whereNull('file_rps')->count();
+        return IKU7::where('status_verifikasi', '=', 'draft')->count();
     }
 }

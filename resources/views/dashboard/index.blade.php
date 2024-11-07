@@ -178,7 +178,7 @@
                 },
                 dataLabels: {
                     enabled: true,
-                    formatter: (val) => `${val} pengajuan`
+                    formatter: (val) => `${val}`
                 },
                 colors: ['#008FFB'],
             };
@@ -225,7 +225,7 @@
                 },
                 dataLabels: {
                     enabled: true,
-                    formatter: (val) => `${val} pengajuan`
+                    formatter: (val) => `${val}`
                 },
                 colors: ['#00E396'],
             };
