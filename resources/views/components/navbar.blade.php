@@ -8,6 +8,12 @@
 
     <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
         <ul class="navbar-nav flex-row align-items-center ms-auto">
+            <li class="nav-item dropdown me-3">
+                <a class="btn btn-sm btn-secondary" href="{{ route('panduan-pengguna') }}">
+                    <i class="fa fa-book" style="font-size: 18px;margin-right:7px;"></i>
+                    Panduan Pengguna
+                </a>
+            </li>
             <li class="nav-item dropdown me-2">
                 <select class="form-select form-select-sm" id="period-select">
                     @foreach ($periods as $period)

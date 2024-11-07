@@ -70,6 +70,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return response()->json(['message' => 'Period updated successfully']);
     })->name('update-period');
 
+    Route::get('/panduan-pengguna', function () {
+        return view('dashboard.panduan-pengguna.index');
+    })->name('panduan-pengguna');
+
     // Comming Soon
     Route::get('/kelas-mata-kuliah', [CourseClassController::class, 'index'])->name('dashboard.kelas-mata-kuliah.index');
     Route::get('/kelas-mata-kuliah/daftar-nilai', [CourseClassController::class, 'index'])->name('dashboard.kelas-mata-kuliah.daftar-nilai.index');
