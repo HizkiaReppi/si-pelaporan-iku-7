@@ -268,7 +268,7 @@
             const chartFacultyOptions = {
                 chart: {
                     type: 'bar',
-                    height: 800,
+                    height: 1000,
                     stacked: false,
                 },
                 series: [{
@@ -303,13 +303,14 @@
                     enabled: true,
                     formatter: (val) => `${val}`,
                 },
-                colors: ['#FFA500', '#28A745', '#DC3545', '#6C757D', '#007BFF'],
+                colors: ['#007BFF', '#6C757D', '#FFA500', '#28A745', '#DC3545'],
                 plotOptions: {
                     bar: {
                         horizontal: true,
-                        barHeight: '100%',
+                        barHeight: '85%',
                     },
                 },
+                yaxis: { labels: { style: { padding: 20 } } },
             };
 
             const facultyChart = new ApexCharts(document.querySelector("#facultyIKUChart"), chartFacultyOptions);
@@ -327,12 +328,12 @@
                     .then(data => {
                         const facultyNames = Object.keys(data);
                         const prosesVerifikasiData = facultyNames.map(faculty => data[faculty]
-                            .proses_verifikasi);
-                        const terverifikasiData = facultyNames.map(faculty => data[faculty].terverifikasi);
-                        const revisiData = facultyNames.map(faculty => data[faculty].revisi);
-                        const draftData = facultyNames.map(faculty => data[faculty].draft);
+                            .proses_verifikasi || 0);
+                        const terverifikasiData = facultyNames.map(faculty => data[faculty].terverifikasi || 0);
+                        const revisiData = facultyNames.map(faculty => data[faculty].revisi || 0);
+                        const draftData = facultyNames.map(faculty => data[faculty].draft || 0);
                         const totalMataKuliahData = facultyNames.map(faculty => data[faculty]
-                            .total_mata_kuliah);
+                            .total_mata_kuliah || 0);
 
                         facultyChart.updateOptions({
                             series: [
@@ -370,7 +371,7 @@
             const ikuDepartmentChartOptions = {
                 chart: {
                     type: 'bar',
-                    height: 800,
+                    height: 1000,
                     stacked: false,
                 },
                 series: [{
@@ -405,13 +406,14 @@
                     enabled: true,
                     formatter: (val) => `${val}`,
                 },
-                colors: ['#FFA500', '#28A745', '#DC3545', '#6C757D', '#007BFF'],
+                colors: ['#007BFF', '#6C757D', '#FFA500', '#28A745', '#DC3545'],
                 plotOptions: {
                     bar: {
                         horizontal: true,
-                        barHeight: '100%',
+                        barHeight: '85%',
                     },
                 },
+                yaxis: { labels: { style: { padding: 20 } } },
             };
 
             const departmentChart = new ApexCharts(document.querySelector("#departmentIKUChart"),
@@ -433,13 +435,13 @@
                     .then(data => {
                         const departmentNames = Object.keys(data);
                         const prosesVerifikasiData = departmentNames.map(department => data[department]
-                            .proses_verifikasi);
+                            .proses_verifikasi || 0);
                         const terverifikasiData = departmentNames.map(department => data[department]
-                            .terverifikasi);
-                        const revisiData = departmentNames.map(department => data[department].revisi);
-                        const draftData = departmentNames.map(department => data[department].draft);
+                            .terverifikasi || 0);
+                        const revisiData = departmentNames.map(department => data[department].revisi || 0);
+                        const draftData = departmentNames.map(department => data[department].draft || 0);
                         const totalMataKuliahData = departmentNames.map(department => data[department]
-                            .total_mata_kuliah);
+                            .total_mata_kuliah || 0);
 
                         departmentChart.updateOptions({
                             series: [
