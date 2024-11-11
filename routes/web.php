@@ -28,6 +28,10 @@ Route::get('/', function () {
     }
 })->name('home');
 
+Route::get('/panduan-pengguna', function () {
+    return view('dashboard.panduan-pengguna.index');
+})->name('panduan-pengguna');
+
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('/dashboard/submissions-by-department', [DashboardController::class, 'getSubmissionsByDepartment'])->name('dashboard.getSubmissionsByDepartment');
@@ -69,10 +73,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         PeriodHelper::setCurrentPeriod($id);
         return response()->json(['message' => 'Period updated successfully']);
     })->name('update-period');
-
-    Route::get('/panduan-pengguna', function () {
-        return view('dashboard.panduan-pengguna.index');
-    })->name('panduan-pengguna');
 
     // Comming Soon
     Route::get('/kelas-mata-kuliah', [CourseClassController::class, 'index'])->name('dashboard.kelas-mata-kuliah.index');

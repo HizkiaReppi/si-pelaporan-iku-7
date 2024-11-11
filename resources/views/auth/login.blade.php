@@ -17,7 +17,7 @@
             <div class="card-body">
                 <!-- Logo -->
                 <div class="app-brand justify-content-center fs-2 mb-3" style="display:flex;flex-direction:column;">
-                    <img src="{{$baseUrl}}/assets/images/logo-unima.png" class="img-fluid" style="width: 100px" />
+                    <img src="{{ $baseUrl }}/assets/images/logo-unima.png" class="img-fluid" style="width: 100px" />
                     <a href="{{ route('home') }}" class="app-brand-link mt-3">
                         SI PELAPORAN IKU 7
                     </a>
@@ -62,11 +62,18 @@
                     </div>
                 </form>
                 <p class="text-center">
-                  <span>Belum memiliki akun?</span>
-                  <a href="{{ route('register') }}">
-                    <span>Daftar sekarang!</span>
-                  </a>
-              </p>
+                    <span>Belum memiliki akun?</span>
+                    <a href="{{ route('register') }}">
+                        <span>Daftar sekarang!</span>
+                    </a>
+                </p>
+                <hr class="border-2" />
+                <div class="d-flex justify-content-center">
+                    <a class="btn btn-secondary" href="{{ route('panduan-pengguna') }}">
+                        <i class="fa fa-book" style="font-size: 18px;margin-right:7px;"></i>
+                        Panduan Pengguna
+                    </a>
+                </div>
             </div>
         </div>
     </section>

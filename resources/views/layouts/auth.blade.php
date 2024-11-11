@@ -23,6 +23,7 @@
     <link rel="stylesheet" href="{{ $baseUrl }}/assets/vendor/css/theme-default.css">
     <script src="{{ $baseUrl }}/assets/vendor/js/helpers.js"></script>
     <script src="{{ $baseUrl }}/assets/js/config.js"></script>
+    <script src="https://kit.fontawesome.com/29057e6c17.js" crossorigin="anonymous"></script>
 
 </head>
 
