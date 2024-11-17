@@ -7,9 +7,13 @@
                     document.write('-' + new Date().getFullYear());
                 }
             </script>
-            | Dibuat oleh 
+            | Dikembangkan oleh 
             <strong>
                 <a href="https://laboratoriumweb.id/#portfolio" target="_blank" class="footer-link fw-bold">Laboratorium Web</a>
+            </strong>
+            bekerja sama dengan
+            <strong>
+                <a href="https://ptik.unima.ac.id" target="_blank" class="footer-link fw-bold">Lab RPL PTIK</a>
             </strong>
         </div>
     </div>
