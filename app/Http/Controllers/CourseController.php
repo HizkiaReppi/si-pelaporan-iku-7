@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\PeriodHelper;
 use App\Models\Course;
 use App\Models\Department;
 use App\Models\IKU7;
@@ -26,7 +27,7 @@ class CourseController extends Controller
         $periods = Period::all();
 
         if ($request->ajax()) {
-            $model = Course::with(['prodi']);
+            $model = Course::where('period_id', PeriodHelper::getCurrentPeriod())->with(['prodi']);
 
             return DataTables::of($model)
                 ->addIndexColumn()

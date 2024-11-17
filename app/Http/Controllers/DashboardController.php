@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\PeriodHelper;
 use App\Models\Course;
 use App\Models\Faculty;
 use App\Models\IKU7;
@@ -24,7 +25,7 @@ class DashboardController extends Controller
         }
 
         $totalDepartmentsWithAccounts = User::has('prodi')->count();
-        $totalCourses = Course::count();
+        $totalCourses = Course::where('period_id', PeriodHelper::getCurrentPeriod())->count();
         $totalCoursesReported = $this->getTotalCoursesReported();
         $totalCoursesNotReported = $this->getTotalCoursesNotReported();
 
@@ -117,11 +118,11 @@ class DashboardController extends Controller
 
     private function getTotalCoursesReported()
     {
-        return IKU7::where('status_verifikasi', '!=', 'draft')->count();
+        return IKU7::where('status_verifikasi', '!=', 'draft')->where('period_id', PeriodHelper::getCurrentPeriod())->count();
     }
 
     private function getTotalCoursesNotReported()
     {
-        return IKU7::where('status_verifikasi', '=', 'draft')->count();
+        return IKU7::where('status_verifikasi', '=', 'draft')->where('period_id', PeriodHelper::getCurrentPeriod())->count();
     }
 }
