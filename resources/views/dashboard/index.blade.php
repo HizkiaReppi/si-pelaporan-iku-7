@@ -268,7 +268,7 @@
             const chartFacultyOptions = {
                 chart: {
                     type: 'bar',
-                    height: 1000,
+                    height: 1500,
                     stacked: false,
                 },
                 series: [{
@@ -371,7 +371,7 @@
             const ikuDepartmentChartOptions = {
                 chart: {
                     type: 'bar',
-                    height: 1000,
+                    height: 1500,
                     stacked: false,
                 },
                 series: [{
