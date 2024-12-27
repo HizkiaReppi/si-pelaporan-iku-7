@@ -81,7 +81,7 @@
                 <div class="mb-3 col-md-6">
                     <label for="file" class="form-label">File RPS</label>
                     @if ($daftar_pelaporan->file_rps)
-                        <a href="{{ route('dashboard.pelaporan-prodi.view', $daftar_pelaporan->id) }}"
+                        <a href="{{ route('dashboard.pelaporan-admin.view', $daftar_pelaporan->id) }}"
                             class="d-block btn btn-secondary">Lihat File</a>
                     @else
                         <button class="d-block btn btn-secondary" type="button" disabled>
