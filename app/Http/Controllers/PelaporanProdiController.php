@@ -49,7 +49,7 @@ class PelaporanProdiController extends Controller
                     return $row->pelaporanIku->deskripsi_verifikasi ?? 'Belum ada data';
                 })
                 ->addColumn('action', function ($row) {
-                    if ($row->pelaporanIku->status_verifikasi !== 'draft') {
+                    if ($row->pelaporanIku->status_verifikasi !== 'draft' && $row->pelaporanIku->status_verifikasi !== 'rejected') {
                         $btn =
                             '<a class="dropdown-item" href="' .
                             route('dashboard.pelaporan-prodi.show', $row->pelaporanIku->id) .
@@ -74,15 +74,6 @@ class PelaporanProdiController extends Controller
                             '" class="dropdown-item btn-edit">
                 <i class="bx bx-edit-alt me-1"></i> Edit
                 </a>';
-                        if (IKUHelper::scoresAreFilled($row->pelaporanIku)) {
-                            $btn .=
-                                '<a href="' .
-                                route('dashboard.pelaporan-prodi.edit-deskripsi', $row->pelaporanIku->id) .
-                                '" class="dropdown-item btn-edit">
-                    <i class="bx bx-edit-alt me-1"></i> Edit Deskripsi
-                    </a>';
-                        }
-
                         $btn .= '
                     </div>
                     </div>';
@@ -116,7 +107,7 @@ class PelaporanProdiController extends Controller
 
     public function edit(IKU7 $pelaporan)
     {
-        if ($pelaporan->status_verifikasi !== 'draft') {
+        if ($pelaporan->status_verifikasi !== 'draft' && $pelaporan->status_verifikasi !== 'rejected') {
             return redirect()->back()
                 ->with('toast_error', 'Data sedang diverifikasi. Silakan menunggu terlebih dahulu.');
         }

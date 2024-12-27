@@ -97,9 +97,9 @@
         </div>
         <div class="d-flex gap-2 mb-4 ms-3" style="margin-top: -15px">
             <a href="{{ route('dashboard.pelaporan-prodi.index') }}" class="btn btn-outline-secondary ms-2">Kembali</a>
-            @if ($pelaporan->status_verifikasi == 'draft')
+            @if ($pelaporan->status_verifikasi == 'draft' || $pelaporan->status_verifikasi == 'rejected')
                 <a class="btn btn-info" href="{{ route('dashboard.pelaporan-prodi.edit', $pelaporan->id) }}">
-                    Edit Bobot & Deskripsi
+                    Edit Data
                 </a>
             @endif
         </div>
