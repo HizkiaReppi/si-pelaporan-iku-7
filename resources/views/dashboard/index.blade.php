@@ -116,7 +116,7 @@
                 <select id="facultyIkuFilter" class="form-select">
                     @foreach ($faculties as $faculty)
                         <option value="{{ $faculty->id }}">
-                            {{ $faculty->name }}
+                            Fakultas {{ $faculty->name }}
                         </option>
                     @endforeach
                 </select>
@@ -147,7 +147,7 @@
                     <select id="facultyFilter" class="form-select">
                         @foreach ($faculties as $faculty)
                             <option value="{{ $faculty->id }}">
-                                {{ $faculty->name }}
+                                Fakultas {{ $faculty->name }}
                             </option>
                         @endforeach
                     </select>
@@ -170,7 +170,10 @@
                     height: 400
                 },
                 xaxis: {
-                    categories: @json($submissionFacultiesData->keys())
+                    categories: @json(
+                        $submissionFacultiesData->keys()->map(function ($faculty) {
+                            return 'Fakultas ' . $faculty;
+                        }))
                 },
                 title: {
                     text: 'Total Pengajuan per Fakultas',
@@ -310,7 +313,13 @@
                         barHeight: '85%',
                     },
                 },
-                yaxis: { labels: { style: { padding: 20 } } },
+                yaxis: {
+                    labels: {
+                        style: {
+                            padding: 20
+                        }
+                    }
+                },
             };
 
             const facultyChart = new ApexCharts(document.querySelector("#facultyIKUChart"), chartFacultyOptions);
@@ -326,18 +335,20 @@
                     })
                     .then(response => response.json())
                     .then(data => {
-                        const facultyNames = Object.keys(data);
-                        const prosesVerifikasiData = facultyNames.map(faculty => data[faculty]
-                            .proses_verifikasi || 0);
-                        const terverifikasiData = facultyNames.map(faculty => data[faculty].terverifikasi || 0);
-                        const revisiData = facultyNames.map(faculty => data[faculty].revisi || 0);
-                        const draftData = facultyNames.map(faculty => data[faculty].draft || 0);
-                        const totalMataKuliahData = facultyNames.map(faculty => data[faculty]
-                            .total_mata_kuliah || 0);
+                        const facultyNames = Object.keys(data).map(faculty => `Fakultas ${faculty}`);
+                        const prosesVerifikasiData = facultyNames.map((_, index) => data[Object.keys(data)[
+                            index]].proses_verifikasi || 0);
+                        const terverifikasiData = facultyNames.map((_, index) => data[Object.keys(data)[
+                            index]].terverifikasi || 0);
+                        const revisiData = facultyNames.map((_, index) => data[Object.keys(data)[index]]
+                            .revisi || 0);
+                        const draftData = facultyNames.map((_, index) => data[Object.keys(data)[index]]
+                            .draft || 0);
+                        const totalMataKuliahData = facultyNames.map((_, index) => data[Object.keys(data)[
+                            index]].total_mata_kuliah || 0);
 
                         facultyChart.updateOptions({
-                            series: [
-                                {
+                            series: [{
                                     name: 'Total Mata Kuliah',
                                     data: totalMataKuliahData
                                 },
@@ -413,7 +424,13 @@
                         barHeight: '85%',
                     },
                 },
-                yaxis: { labels: { style: { padding: 20 } } },
+                yaxis: {
+                    labels: {
+                        style: {
+                            padding: 20
+                        }
+                    }
+                },
             };
 
             const departmentChart = new ApexCharts(document.querySelector("#departmentIKUChart"),
@@ -444,8 +461,7 @@
                             .total_mata_kuliah || 0);
 
                         departmentChart.updateOptions({
-                            series: [
-                                {
+                            series: [{
                                     name: 'Total Mata Kuliah',
                                     data: totalMataKuliahData
                                 },
