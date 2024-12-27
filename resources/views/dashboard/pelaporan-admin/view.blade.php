@@ -113,7 +113,7 @@
     </header>
     <div id="pdfCanvasContainer" class="galley_view">
         <iframe
-            src="{{ asset('vendor/pdfJsViewer/pdf.js/web/viewer.html?file=' . urlencode($daftar_pelaporan->file_rps)) }}"
+            src="{{ asset('vendor/pdfJsViewer/pdf.js/web/viewer.html?file=' . asset($daftar_pelaporan->file_rps)) }}"
             title="{{ $content }}"
             class="pdfCanvas"
             allowfullscreen
