@@ -17,57 +17,57 @@
                 </div>
                 <div class="mb-3 col-md-6">
                     <label for="bobot-case-method" class="form-label">Bobot Case Method</label>
-                    <p class="border p-2 rounded m-0">{{ $daftar_pelaporan->score_case_method }}</p>
+                    <p class="border p-2 rounded m-0">{{ $daftar_pelaporan->score_case_method ?? '-' }}</p>
                 </div>
                 <div class="mb-3 col-md-6">
                     <label for="bobot-project-based" class="form-label">Bobot Project Based</label>
-                    <p class="border p-2 rounded m-0">{{ $daftar_pelaporan->score_project_based }}</p>
+                    <p class="border p-2 rounded m-0">{{ $daftar_pelaporan->score_project_based ?? '-' }}</p>
                 </div>
                 <div class="mb-3 col-md-6">
                     <label for="bobot-kognitif-tugas" class="form-label">Bobot Kognitif Tugas</label>
-                    <p class="border p-2 rounded m-0">{{ $daftar_pelaporan->score_cognitive_task }}</p>
+                    <p class="border p-2 rounded m-0">{{ $daftar_pelaporan->score_cognitive_task ?? '-' }}</p>
                 </div>
                 <div class="mb-3 col-md-6">
                     <label for="bobot-kognitif-kuis" class="form-label">Bobot Kognitif Kuis</label>
-                    <p class="border p-2 rounded m-0">{{ $daftar_pelaporan->score_cognitive_quiz }}</p>
+                    <p class="border p-2 rounded m-0">{{ $daftar_pelaporan->score_cognitive_quiz ?? '-' }}</p>
                 </div>
                 <div class="mb-3 col-md-6">
                     <label for="bobot-kognitif-uts" class="form-label">Bobot Kognitif UTS</label>
-                    <p class="border p-2 rounded m-0">{{ $daftar_pelaporan->score_cognitive_uts }}</p>
+                    <p class="border p-2 rounded m-0">{{ $daftar_pelaporan->score_cognitive_uts ?? '-' }}</p>
                 </div>
                 <div class="mb-3 col-md-6">
                     <label for="bobot-kognitif-uas" class="form-label">Bobot Kognitif UAS</label>
-                    <p class="border p-2 rounded m-0">{{ $daftar_pelaporan->score_cognitive_uas }}</p>
+                    <p class="border p-2 rounded m-0">{{ $daftar_pelaporan->score_cognitive_uas ?? '-' }}</p>
                 </div>
                 <div class="mb-3">
                     <label for="deskripsi-penilaian-case-method" class="form-label">Deskripsi Penilaian Case
                         Method</label>
-                    <div class="border p-2 rounded m-0">{!! $daftar_pelaporan->description_case_method !!}</div>
+                    <div class="border p-2 rounded m-0">{!! $daftar_pelaporan->description_case_method ?? '-' !!}</div>
                 </div>
                 <div class="mb-3">
                     <label for="deskripsi-penilaian-project-based" class="form-label">Deskripsi Penilaian Project
                         Based</label>
-                    <div class="border p-2 rounded m-0">{!! $daftar_pelaporan->description_project_based !!}</div>
+                    <div class="border p-2 rounded m-0">{!! $daftar_pelaporan->description_project_based ?? '-' !!}</div>
                 </div>
                 <div class="mb-3">
                     <label for="deskripsi-penilaian-kognitif-tugas" class="form-label">Deskripsi Penilaian Kognitif
                         Tugas</label>
-                    <div class="border p-2 rounded m-0">{!! $daftar_pelaporan->description_cognitive_task !!}</div>
+                    <div class="border p-2 rounded m-0">{!! $daftar_pelaporan->description_cognitive_task ?? '-' !!}</div>
                 </div>
                 <div class="mb-3">
                     <label for="deskripsi-penilaian-kognitif-kuis" class="form-label">Deskripsi Penilaian Kognitif
                         Kuis</label>
-                    <div class="border p-2 rounded m-0">{!! $daftar_pelaporan->description_cognitive_quiz !!}</div>
+                    <div class="border p-2 rounded m-0">{!! $daftar_pelaporan->description_cognitive_quiz ?? '-' !!}</div>
                 </div>
                 <div class="mb-3">
                     <label for="deskripsi-penilaian-kognitif-uts" class="form-label">Deskripsi Penilaian Kognitif
                         UTS</label>
-                    <div class="border p-2 rounded m-0">{!! $daftar_pelaporan->description_cognitive_uts !!}</div>
+                    <div class="border p-2 rounded m-0">{!! $daftar_pelaporan->description_cognitive_uts ?? '-' !!}</div>
                 </div>
                 <div class="mb-3">
                     <label for="deskripsi-penilaian-kognitif-uas" class="form-label">Deskripsi Penilaian Kognitif
                         UAS</label>
-                    <div class="border p-2 rounded m-0">{!! $daftar_pelaporan->description_cognitive_uas !!}</div>
+                    <div class="border p-2 rounded m-0">{!! $daftar_pelaporan->description_cognitive_uas ?? '-' !!}</div>
                 </div>
                 <div class="mb-3 col-md-6">
                     <label for="email" class="form-label">Status Verifikasi</label>
