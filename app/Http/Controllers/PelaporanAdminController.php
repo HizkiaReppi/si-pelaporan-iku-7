@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Helpers\PeriodHelper;
 use App\Helpers\StatusHelper;
+use App\Mail\StatusUpdatedMail;
 use App\Models\Course;
 use App\Models\IKU7;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -23,7 +26,9 @@ class PelaporanAdminController extends Controller
         confirmDelete($title, $text);
 
         if ($request->ajax()) {
-            $model = Course::where('period_id', PeriodHelper::getCurrentPeriod())->with(['pelaporanIku', 'periode', 'prodi'])->get();
+            $model = Course::where('period_id', PeriodHelper::getCurrentPeriod())
+                ->with(['pelaporanIku', 'periode', 'prodi'])
+                ->get();
 
             return DataTables::of($model)
                 ->addIndexColumn()
@@ -101,9 +106,14 @@ class PelaporanAdminController extends Controller
             if (isset($validatedData['deskripsi'])) {
                 $daftar_pelaporan->deskripsi_verifikasi = $validatedData['deskripsi'];
             }
-            
-            if($validatedData['status'] == 'approved' && !isset($validatedData['deskripsi'])) {
+
+            if ($validatedData['status'] == 'approved' && !isset($validatedData['deskripsi'])) {
                 $daftar_pelaporan->deskripsi_verifikasi = null;
+            }
+
+            $user = User::where('department_id', $daftar_pelaporan->prodi->id)->first();
+            if ($user && filter_var($user->email, FILTER_VALIDATE_EMAIL)) {
+                Mail::to($user->email)->send(new StatusUpdatedMail($daftar_pelaporan));
             }
 
             $daftar_pelaporan->save();
@@ -122,7 +132,7 @@ class PelaporanAdminController extends Controller
         $filePath = str_replace('/storage', 'public', $daftar_pelaporan->file_rps);
         $filePath = storage_path('app/' . $filePath);
         $mimeType = mime_content_type($filePath);
-        
+
         return view('dashboard.pelaporan-admin.view', compact('daftar_pelaporan', 'mimeType'));
     }
 
