@@ -30,7 +30,7 @@ class StatusUpdatedMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Pembaruan Status Verifikasi Mata Kuliah',
+            subject: 'Pembaruan Status Verifikasi Mata Kuliah ' . $this->daftarPelaporan->mataKuliah->name,
             tags: ['mata_kuliah', 'iku'],
             metadata: [
                 'id' => $this->daftarPelaporan->id
