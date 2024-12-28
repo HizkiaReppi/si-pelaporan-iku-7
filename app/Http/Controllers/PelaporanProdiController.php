@@ -8,6 +8,8 @@ use App\Helpers\StatusHelper;
 use App\Models\Course;
 use App\Models\IKU7;
 use App\Models\Period;
+use App\Models\User;
+use App\Notifications\ReportUpdatedNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -27,7 +29,8 @@ class PelaporanProdiController extends Controller
         confirmDelete($title, $text);
 
         if ($request->ajax()) {
-            $model = Course::where('period_id', PeriodHelper::getCurrentPeriod())->where('department_id', auth()->user()->department_id)
+            $model = Course::where('period_id', PeriodHelper::getCurrentPeriod())
+                ->where('department_id', auth()->user()->department_id)
                 ->with(['pelaporanIku', 'periode'])
                 ->get();
 
@@ -108,8 +111,7 @@ class PelaporanProdiController extends Controller
     public function edit(IKU7 $pelaporan)
     {
         if ($pelaporan->status_verifikasi !== 'draft' && $pelaporan->status_verifikasi !== 'rejected') {
-            return redirect()->back()
-                ->with('toast_error', 'Data sedang diverifikasi. Silakan menunggu terlebih dahulu.');
+            return redirect()->back()->with('toast_error', 'Data sedang diverifikasi. Silakan menunggu terlebih dahulu.');
         }
 
         $pelaporan->load('mataKuliah');
@@ -149,7 +151,7 @@ class PelaporanProdiController extends Controller
             return back()->withErrors($validatedData)->withInput();
         }
 
-        $data = $validatedData->validated(); 
+        $data = $validatedData->validated();
 
         DB::beginTransaction();
 
@@ -161,28 +163,27 @@ class PelaporanProdiController extends Controller
             $pelaporan->score_cognitive_uts = $data['bobot_kognitif_uts'];
             $pelaporan->score_cognitive_uas = $data['bobot_kognitif_uas'];
 
-
-            if(isset($data['deskripsi_penilaian_case_method'])) {
+            if (isset($data['deskripsi_penilaian_case_method'])) {
                 $pelaporan->description_case_method = $data['deskripsi_penilaian_case_method'];
             }
 
-            if(isset($data['deskripsi_penilaian_project_based'])) {
+            if (isset($data['deskripsi_penilaian_project_based'])) {
                 $pelaporan->description_project_based = $data['deskripsi_penilaian_project_based'];
             }
 
-            if(isset($data['deskripsi_penilaian_kognitif_tugas'])) {
+            if (isset($data['deskripsi_penilaian_kognitif_tugas'])) {
                 $pelaporan->description_cognitive_task = $data['deskripsi_penilaian_kognitif_tugas'];
             }
 
-            if(isset($data['deskripsi_penilaian_kognitif_kuis'])) {
+            if (isset($data['deskripsi_penilaian_kognitif_kuis'])) {
                 $pelaporan->description_cognitive_quiz = $data['deskripsi_penilaian_kognitif_kuis'];
             }
 
-            if(isset($data['deskripsi_penilaian_kognitif_uts'])) {
+            if (isset($data['deskripsi_penilaian_kognitif_uts'])) {
                 $pelaporan->description_cognitive_uts = $data['deskripsi_penilaian_kognitif_uts'];
             }
 
-            if(isset($data['deskripsi_penilaian_kognitif_uas'])) {
+            if (isset($data['deskripsi_penilaian_kognitif_uas'])) {
                 $pelaporan->description_cognitive_uas = $data['deskripsi_penilaian_kognitif_uas'];
             }
 
@@ -201,6 +202,14 @@ class PelaporanProdiController extends Controller
 
             $pelaporan->file_rps = $formattedFilePath;
             $pelaporan->status_verifikasi = 'pending';
+
+            $adminUsers = User::where('role', 'admin')
+                ->whereNotIn('email', ['superadmin@gmail.com', 'admin@gmail.com'])
+                ->get();
+
+            foreach ($adminUsers as $admin) {
+                $admin->notify(new ReportUpdatedNotification($pelaporan));
+            }
 
             $pelaporan->save();
 
